@@ -407,15 +407,79 @@ document.onkeydown = function(e) {
     }
 };
 
-// Trava o Console se conseguirem abrir por outros meios
-setInterval(function() {
-    const before = new Date().getTime();
-    debugger;
-    const after = new Date().getTime();
-    if (after - before > 100) {
-        document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%'>O CÓDIGO NÃO É CLEAN, SEU CUSÃO!</h1>";
+// 1. BLOQUEIO TOTAL ANTI-F12
+document.onkeydown = function(e) {
+    if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) {
+        console.clear();
+        console.log("%cAPERTAR F12 PRA VER O CÓDIGO NÃO É CLEAN, SEU CUSÃO!", "color: red; font-size: 30px; font-weight: bold;");
+        alert("APERTAR F12 PRA VER O CÓDIGO NÃO É CLEAN, SEU CUSÃO!");
+        return false;
     }
-}, 100);
+};
+
+// ==========================================
+// 🛡️ PROTOCOLO DE SEGURANÇA WEAZEL FM
+// ==========================================
+
+// 1. BLOQUEIO TOTAL DO BOTÃO DIREITO
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    console.clear();
+    console.log("%cAPERTAR BOTÃO DIREITO NÃO É CLEAN, SEU CUSÃO!", "color: red; font-size: 25px; font-weight: bold;");
+    alert("BOTÃO DIREITO BLOQUEADO! O CÓDIGO NÃO É CLEAN, SEU CUSÃO!");
+}, false);
+
+// 2. BLOQUEIO DE TECLAS (F12, CTRL+SHIFT+I, CTRL+U, ETC.)
+document.onkeydown = function(e) {
+    // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
+    if (e.keyCode == 123 || 
+        (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || 
+        (e.ctrlKey && e.keyCode == 85)) {
+        
+        console.clear();
+        alert("APERTAR F12 PRA VER O CÓDIGO NÃO É CLEAN, SEU CUSÃO!");
+        return false;
+    }
+};
+
+// 3. DETECTOR DE CONSOLE ABERTO (SE O CARA CONSEGUIR ABRIR, A PÁGINA "TRAVA")
+setInterval(function() {
+    const startTime = new Date().getTime();
+    debugger; // Pausa o código se o DevTools estiver aberto
+    const endTime = new Date().getTime();
+    
+    if (endTime - startTime > 100) {
+        document.body.innerHTML = `
+            <div style="background:#000; color:red; height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column; font-family:'Oswald',sans-serif;">
+                <h1 style="font-size:3rem;">ACESSANDO O CÓDIGO?</h1>
+                <p style="font-size:1.5rem;">ISSO NÃO É CLEAN, SEU CUSÃO!</p>
+                <button onclick="location.reload()" style="background:red; color:white; border:none; padding:10px 20px; cursor:pointer; font-weight:bold; margin-top:20px;">VOLTAR PRO RP</button>
+            </div>
+        `;
+    }
+}, 1000);
+
+// 4. FUNÇÃO DE LOGIN (ANDREW GALLOWAY ADMIN)
+async function login() {
+    const user = document.getElementById('username').value;
+    const pass = document.getElementById('password').value;
+
+    try {
+        const snapshot = await firebase.database().ref('contas/' + user).once('value');
+        const userData = snapshot.val();
+
+        if (userData && userData.senha === pass) {
+            localStorage.setItem('weazel_user', user);
+            localStorage.setItem('weazel_rank', userData.rank);
+            alert("Acesso autorizado. Fala, chefe!");
+            window.location.href = "editor.html";
+        } else {
+            alert("SAI FORA, CUSÃO! USUÁRIO OU SENHA ERRADOS.");
+        }
+    } catch (error) {
+        console.error("Erro na autenticação");
+    }
+}
     </script>
 </body>
 </html>
