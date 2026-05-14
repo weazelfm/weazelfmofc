@@ -100,7 +100,6 @@
             animation: fadeIn 0.5s ease;
         }
 
-        /* Efeito de crescer que você pediu */
         .card-clicavel {
             transition: transform 0.2s ease;
             cursor: pointer;
@@ -175,6 +174,18 @@
         .hidden { display: none; }
         
         footer { text-align: center; padding: 40px; color: #444; font-size: 0.8rem; border-top: 1px solid #222; }
+
+        .admin-controls {
+            margin-top:25px; 
+            border-top:1px solid #2a2d37; 
+            padding-top:15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-admin {
+            color:#fff; border:none; padding:8px 15px; cursor:pointer; border-radius:3px; font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 0.7rem;
+        }
     </style>
 </head>
 <body>
@@ -210,7 +221,6 @@
             <button onclick="voltarHome()" style="background: var(--primary); color: white; padding: 12px 25px; cursor: pointer; border: none; font-family: 'Oswald'; font-weight: bold; margin-bottom: 25px; border-radius: 4px;">
                ⬅ VOLTAR PARA A HOME
             </button>
-
             <div class="news-card">
                 <div class="card-header">
                     <span id="aberto-categoria" class="badge"></span>
@@ -236,23 +246,18 @@
                     <option value="Cotidiano">Cotidiano</option>
                     <option value="Entrevistas">Entrevistas</option>
                 </select>
-                <textarea id="content" rows="12" placeholder="Conteúdo detalhado. Pule uma linha para intercalar com as imagens." required></textarea>
-                
-                <p style="font-size: 0.8rem; color: var(--text-gray); margin-bottom: 5px;">Links das Imagens (Até 4):</p>
+                <textarea id="content" rows="12" placeholder="Conteúdo detalhado..." required></textarea>
                 <input type="url" id="img1" placeholder="URL da Imagem 1 (Topo)">
-                <input type="url" id="img2" placeholder="URL da Imagem 2 (Meio)">
-                <input type="url" id="img3" placeholder="URL da Imagem 3 (Meio)">
-                <input type="url" id="img4" placeholder="URL da Imagem 4 (Fim)">
-                
+                <input type="url" id="img2" placeholder="URL da Imagem 2">
+                <input type="url" id="img3" placeholder="URL da Imagem 3">
+                <input type="url" id="img4" placeholder="URL da Imagem 4">
                 <button type="submit" class="btn-publish">Publicar no Portal</button>
-                <button type="button" onclick="showPage('feed')" style="background:none; border:none; color:#555; cursor:pointer; width:100%; margin-top:10px">Cancelar e Voltar</button>
+                <button type="button" onclick="showPage('feed')" style="background:none; border:none; color:#555; cursor:pointer; width:100%; margin-top:10px">Cancelar</button>
             </form>
         </div>
     </div>
 
-    <footer>
-        &copy; 2026 WEAZEL FM NETWORK - Confirming Your Prejudices.
-    </footer>
+    <footer>&copy; 2026 WEAZEL FM NETWORK</footer>
 
     <script>
         const firebaseConfig = {
@@ -287,6 +292,8 @@
                 if (prompt("Credenciais de Jornalista:") === PASS) {
                     isLogged = true;
                     document.getElementById('auth-btn').innerText = "Nova Matéria";
+                    // Força o re-render para mostrar os botões de adm
+                    newsRef.once('value', s => render(s.val()));
                     showPage('editor');
                 } else { alert("Senha incorreta!"); }
             }
@@ -300,9 +307,7 @@
             window.scrollTo(0,0);
         }
 
-        function voltarHome() {
-            showPage('feed');
-        }
+        function voltarHome() { showPage('feed'); }
 
         function abrirMateria(id) {
             newsRef.child(id).once('value', (snapshot) => {
@@ -315,7 +320,6 @@
                 const paragraphs = item.content.split('\n');
                 let contentHtml = '';
                 let imgCount = 0;
-
                 paragraphs.forEach(p => {
                     if(p.trim()) {
                         contentHtml += `<p>${p}</p>`;
@@ -325,7 +329,6 @@
                         }
                     }
                 });
-
                 document.getElementById('conteudo-aberto').innerHTML = contentHtml;
                 document.getElementById('pagina-home').classList.add('hidden');
                 document.getElementById('filter-nav').classList.add('hidden');
@@ -343,20 +346,15 @@
                 category: document.getElementById('category').value,
                 content: document.getElementById('content').value,
                 images: [
-                    document.getElementById('img1').value,
-                    document.getElementById('img2').value,
-                    document.getElementById('img3').value,
-                    document.getElementById('img4').value
+                    document.getElementById('img1').value, document.getElementById('img2').value,
+                    document.getElementById('img3').value, document.getElementById('img4').value
                 ].filter(url => url.trim() !== ""),
-                date: new Date().toLocaleString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'}),
+                date: new Date().toLocaleString('pt-BR'),
                 timestamp: Date.now()
             };
 
-            if(id) {
-                database.ref('articles/' + id).set(postData);
-            } else {
-                newsRef.push(postData);
-            }
+            if(id) { database.ref('articles/' + id).set(postData); } 
+            else { newsRef.push(postData); }
 
             this.reset();
             document.getElementById('edit-id').value = '';
@@ -364,24 +362,18 @@
         });
 
         newsRef.on('value', (snapshot) => {
-            const loadingElement = document.getElementById('loading');
-            if(loadingElement) loadingElement.style.display = 'none';
+            const loading = document.getElementById('loading');
+            if(loading) loading.style.display = 'none';
             render(snapshot.val());
         });
 
         function render(data, filter = 'all') {
             const feed = document.getElementById('feed-page');
             feed.innerHTML = '';
-            
-            if(!data) {
-                feed.innerHTML = `<p style="text-align:center; color:#444; margin-top:80px">Nenhuma notícia disponível ainda.</p>`;
-                return;
-            }
+            if(!data) return;
 
-            const articles = Object.keys(data).map(key => ({
-                id: key,
-                ...data[key]
-            })).sort((a, b) => b.timestamp - a.timestamp);
+            const articles = Object.keys(data).map(key => ({ id: key, ...data[key] }))
+                                   .sort((a, b) => b.timestamp - a.timestamp);
 
             const filteredData = filter === 'all' ? articles : articles.filter(n => n.category === filter);
 
@@ -394,15 +386,14 @@
                         </div>
                         <div class="card-content">
                             <h1 class="news-title">${item.title}</h1>
-                            <span class="news-meta">Publicado por: <strong style="color:#fff">${item.author}</strong></span>
+                            <span class="news-meta">Por: <strong style="color:#fff">${item.author}</strong></span>
                             <p style="color:#aaa">${item.content.substring(0, 150)}...</p>
-                            <strong style="color:var(--primary); font-size:0.8rem">LER MATÉRIA COMPLETA ➔</strong>
                             ${isLogged ? `
-                                <div style="margin-top:25px; border-top:1px solid #2a2d37; padding-top:15px" onclick="event.stopPropagation()">
-                                    <button onclick="editPost('${item.id}')" style="background:#444; color:#fff; border:none; padding:6px 12px; cursor:pointer; border-radius:3px">Editar</button>
-                                    <button onclick="deletePost('${item.id}')" style="background:#300; color:#f66; border:none; padding:6px 12px; cursor:pointer; border-radius:3px">Apagar</button>
+                                <div class="admin-controls" onclick="event.stopPropagation()">
+                                    <button class="btn-admin" style="background:#444" onclick="editPost('${item.id}')">Editar</button>
+                                    <button class="btn-admin" style="background:#300; color:#f66" onclick="deletePost('${item.id}')">Apagar</button>
                                 </div>
-                            ` : ''}
+                            ` : `<strong style="color:var(--primary); font-size:0.8rem">LER MATÉRIA COMPLETA ➔</strong>`}
                         </div>
                     </div>
                 `;
@@ -416,7 +407,7 @@
         }
 
         function deletePost(id) {
-            if(confirm("Deseja deletar esta matéria da WEAZEL FM?")) {
+            if(confirm("Deseja deletar esta matéria?")) {
                 database.ref('articles/' + id).remove();
             }
         }
@@ -429,19 +420,17 @@
                 document.getElementById('title').value = p.title;
                 document.getElementById('category').value = p.category;
                 document.getElementById('content').value = p.content;
-                document.getElementById('img1').value = p.images[0] || '';
-                document.getElementById('img2').value = p.images[1] || '';
-                document.getElementById('img3').value = p.images[2] || '';
-                document.getElementById('img4').value = p.images[3] || '';
+                document.getElementById('img1').value = (p.images && p.images[0]) || '';
+                document.getElementById('img2').value = (p.images && p.images[1]) || '';
+                document.getElementById('img3').value = (p.images && p.images[2]) || '';
+                document.getElementById('img4').value = (p.images && p.images[3]) || '';
                 showPage('editor');
             });
         }
 
-        // Bloqueios de Segurança
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = function(e) {
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) {
-                alert("APERTAR F12 PRA VER O CÓDIGO NÃO É CLEAN, SEU CUSÃO!");
                 return false;
             }
         };
