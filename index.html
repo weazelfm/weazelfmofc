@@ -169,7 +169,24 @@
             cursor: pointer;
             border-radius: 4px;
             font-family: 'Oswald', sans-serif;
+            margin-bottom: 10px;
         }
+
+        .btn-home-editor {
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: 'Oswald', sans-serif;
+            transition: 0.3s;
+        }
+
+        .btn-home-editor:hover { background: #444; }
 
         .hidden { display: none; }
         
@@ -235,7 +252,7 @@
         </div>
 
         <div id="editor-page" class="editor-section hidden">
-            <h2>REDIGIR MATÉRIA - WEAZEL FM</h2>
+            <h2 id="editor-title">REDIGIR MATÉRIA - WEAZEL FM</h2>
             <form id="news-form">
                 <input type="hidden" id="edit-id">
                 <input type="text" id="author" placeholder="Nome do Jornalista" required>
@@ -251,13 +268,14 @@
                 <input type="url" id="img2" placeholder="URL da Imagem 2">
                 <input type="url" id="img3" placeholder="URL da Imagem 3">
                 <input type="url" id="img4" placeholder="URL da Imagem 4">
+                
                 <button type="submit" class="btn-publish">Publicar no Portal</button>
-                <button type="button" onclick="showPage('feed')" style="background:none; border:none; color:#555; cursor:pointer; width:100%; margin-top:10px">Cancelar</button>
+                <button type="button" onclick="showPage('feed')" class="btn-home-editor">Voltar para Home</button>
             </form>
         </div>
     </div>
 
-    <footer>&copy; 2026 WEAZEL FM NETWORK</footer>
+    <footer>&copy; 2026 WEAZEL FM NETWORK - Confirming Your Prejudices.</footer>
 
     <script>
         const firebaseConfig = {
@@ -275,6 +293,7 @@
         const newsRef = database.ref('articles');
 
         let isLogged = false;
+        let loggedUser = "";
         const PASS = "andrewgallowaywfm";
 
         function updateTime() {
@@ -289,13 +308,21 @@
             if (isLogged) {
                 showPage('editor');
             } else {
-                if (prompt("Credenciais de Jornalista:") === PASS) {
-                    isLogged = true;
-                    document.getElementById('auth-btn').innerText = "Nova Matéria";
-                    // Força o re-render para mostrar os botões de adm
-                    newsRef.once('value', s => render(s.val()));
-                    showPage('editor');
-                } else { alert("Senha incorreta!"); }
+                const passwordInput = prompt("Senha da Redação:");
+                if (passwordInput === PASS) {
+                    const nameInput = prompt("Qual o seu nome, jornalista?");
+                    if (nameInput) {
+                        isLogged = true;
+                        loggedUser = nameInput;
+                        document.getElementById('auth-btn').innerText = loggedUser.toUpperCase();
+                        document.getElementById('author').value = loggedUser;
+                        // Atualiza feed para mostrar botões de admin
+                        newsRef.once('value', s => render(s.val()));
+                        showPage('editor');
+                    }
+                } else if(passwordInput !== null) { 
+                    alert("SAI FORA, CUSÃO! SENHA INCORRETA."); 
+                }
             }
         }
 
@@ -358,6 +385,8 @@
 
             this.reset();
             document.getElementById('edit-id').value = '';
+            // Se for autor logado, mantém o nome dele no campo para a próxima
+            if(isLogged) document.getElementById('author').value = loggedUser;
             showPage('feed');
         });
 
@@ -428,6 +457,7 @@
             });
         }
 
+        // Proteções de Segurança
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = function(e) {
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) {
