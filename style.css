@@ -1,31 +1,17 @@
-/* Efeito de crescer ao passar o mouse */
+/* Efeito de crescer no card */
 .news-card {
-    background: var(--card-bg);
-    border-radius: 10px;
-    border: 1px solid #2a2d37;
-    margin-bottom: 30px;
-    overflow: hidden;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
-    cursor: pointer; /* Indica que é clicável */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+    cursor: pointer;
 }
 
 .news-card:hover {
-    transform: scale(1.02); /* Cresce levemente */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    border-color: var(--primary);
+    transform: scale(1.01);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    border-color: var(--primary) !important;
 }
 
-/* Esconder conteúdo longo na home */
-.content-preview {
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* Mostra só 3 linhas */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    color: var(--text-gray);
-}
-
-/* Botão Home flutuante ou fixo para quando a matéria estiver aberta */
-.btn-home-back {
+/* Botão de voltar */
+.btn-back {
     background: var(--primary);
     color: white;
     border: none;
@@ -34,5 +20,5 @@
     cursor: pointer;
     margin-bottom: 20px;
     border-radius: 4px;
-    text-transform: uppercase;
+    display: inline-block;
 }
