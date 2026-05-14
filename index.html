@@ -480,6 +480,26 @@ async function login() {
         console.error("Erro na autenticação");
     }
 }
+
+        // DENTRO DO SEU LOOP DE NOTÍCIAS NO RENDER():
+feed.innerHTML += `
+    <div class="news-card">
+        <div class="news-content">
+            <div class="comments-section">
+                <h4 style="font-family:'Oswald'">COMENTÁRIOS</h4>
+                <div id="comments-${item.id}"></div>
+                
+                <div class="comment-form">
+                    <input type="text" id="name-${item.id}" class="comment-input" style="width:120px" placeholder="Seu Nome">
+                    <input type="text" id="input-${item.id}" class="comment-input" placeholder="O que você acha disso?">
+                    <button class="btn-red" onclick="postComment('${item.id}')" style="padding:10px">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+`;
+// Chama os comentários logo após criar o card
+loadComments(item.id);
     </script>
 </body>
 </html>
