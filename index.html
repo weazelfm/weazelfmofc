@@ -172,7 +172,7 @@
 
     <div class="top-bar">
         <div class="logo-main" onclick="window.location.reload()">
-            <img src="https://i.imgur.com/vW8oNfE.png" alt="WEAZEL FM"> <!-- Link de exemplo para o logo -->
+            <img src="ChatGPT Image 12 de mai. de 2026, 15_45_01.png" alt="WEAZEL FM">
         </div>
         <div class="user-area">
             <button class="login-btn" id="auth-btn" onclick="handleAuth()">Acesso Redação</button>
@@ -226,7 +226,9 @@
     </footer>
 
     <script>
-        // Configurações do Firebase
+        // ==========================================
+        // CONFIGURAÇÕES DO SEU FIREBASE AQUI
+        // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyBTYu6dC3Iyz-qtjHKvLaq-B_4qXMb1C4w",
             authDomain: "weazelfm-dfb2e.firebaseapp.com",
@@ -236,7 +238,9 @@
             messagingSenderId: "70517176119",
             appId: "1:70517176119:web:523e4e13cfedd0e0018cb2"
         };
+        // ==========================================
 
+        // Inicializar Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const newsRef = database.ref('articles');
@@ -244,6 +248,7 @@
         let isLogged = false;
         const PASS = "andrewgallowaywfm";
 
+        // Relógio Real-time
         function updateTime() {
             const now = new Date();
             document.getElementById('current-time').innerText = now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
@@ -260,7 +265,6 @@
                     isLogged = true;
                     document.getElementById('auth-btn').innerText = "Nova Matéria";
                     showPage('editor');
-                    newsRef.once('value', (snapshot) => render(snapshot.val())); // Re-renderiza para mostrar botões de edit/delete
                 } else { alert("Senha incorreta!"); }
             }
         }
@@ -272,6 +276,7 @@
             window.scrollTo(0,0);
         }
 
+        // SALVAR NO FIREBASE
         document.getElementById('news-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const id = document.getElementById('edit-id').value;
@@ -301,9 +306,11 @@
             showPage('feed');
         });
 
+        // LER DO FIREBASE EM TEMPO REAL
         newsRef.on('value', (snapshot) => {
             document.getElementById('loading').style.display = 'none';
-            render(snapshot.val());
+            const data = snapshot.val();
+            render(data);
         });
 
         function render(data, filter = 'all') {
@@ -315,6 +322,7 @@
                 return;
             }
 
+            // Converter objeto em array e ordenar por tempo
             const articles = Object.keys(data).map(key => ({
                 id: key,
                 ...data[key]
@@ -366,7 +374,7 @@
         }
 
         function deletePost(id) {
-            if(confirm("Deseja deletar esta matéria?")) {
+            if(confirm("Deseja deletar esta matéria da WEAZEL FM?")) {
                 database.ref('articles/' + id).remove();
             }
         }
@@ -379,13 +387,99 @@
                 document.getElementById('title').value = p.title;
                 document.getElementById('category').value = p.category;
                 document.getElementById('content').value = p.content;
-                document.getElementById('img1').value = (p.images && p.images[0]) || '';
-                document.getElementById('img2').value = (p.images && p.images[1]) || '';
-                document.getElementById('img3').value = (p.images && p.images[2]) || '';
-                document.getElementById('img4').value = (p.images && p.images[3]) || '';
+                document.getElementById('img1').value = p.images[0] || '';
+                document.getElementById('img2').value = p.images[1] || '';
+                document.getElementById('img3').value = p.images[2] || '';
+                document.getElementById('img4').value = p.images[3] || '';
                 showPage('editor');
             });
         }
+// Bloqueio de Teclas e F12
+document.onkeydown = function(e) {
+    if (e.keyCode == 123 || 
+        (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) ||
+        (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
+        
+        console.clear();
+        console.log("%cAPERTAR F12 PRA VER O CÓDIGO NÃO É CLEAN, SEU CUSÃO!", "color: red; font-size: 30px; font-weight: bold; text-shadow: 2px 2px black;");
+        alert("APERTAR F12 PRA VER O CÓDIGO NÃO É CLEAN, SEU CUSÃO!");
+        return false;
+    }
+};
+
+// 1. BLOQUEIO TOTAL ANTI-F12
+document.onkeydown = function(e) {
+    if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) {
+        console.clear();
+        console.log("%cAPERTAR F12 PRA VER O CÓDIGO NÃO É CLEAN, SEU CUSÃO!", "color: red; font-size: 30px; font-weight: bold;");
+        alert("APERTAR F12 PRA VER O CÓDIGO NÃO É CLEAN, SEU CUSÃO!");
+        return false;
+    }
+};
+
+// ==========================================
+// 🛡️ PROTOCOLO DE SEGURANÇA WEAZEL FM
+// ==========================================
+
+// 1. BLOQUEIO TOTAL DO BOTÃO DIREITO
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    console.clear();
+    console.log("%cAPERTAR BOTÃO DIREITO NÃO É CLEAN, SEU CUSÃO!", "color: red; font-size: 25px; font-weight: bold;");
+    alert("BOTÃO DIREITO BLOQUEADO! VEM KIBAR O CÓDIGO NÃO!");
+}, false);
+
+// 2. BLOQUEIO DE TECLAS (F12, CTRL+SHIFT+I, CTRL+U, ETC.)
+document.onkeydown = function(e) {
+    // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
+    if (e.keyCode == 123 || 
+        (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || 
+        (e.ctrlKey && e.keyCode == 85)) {
+        
+        console.clear();
+        alert("APERTAR F12 PRA VER O CÓDIGO NÃO É CLEAN, SEU CUSÃO!");
+        return false;
+    }
+};
+
+// 3. DETECTOR DE CONSOLE ABERTO (SE O CARA CONSEGUIR ABRIR, A PÁGINA "TRAVA")
+setInterval(function() {
+    const startTime = new Date().getTime();
+    debugger; // Pausa o código se o DevTools estiver aberto
+    const endTime = new Date().getTime();
+    
+    if (endTime - startTime > 100) {
+        document.body.innerHTML = `
+            <div style="background:#000; color:red; height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column; font-family:'Oswald',sans-serif;">
+                <h1 style="font-size:3rem;">ACESSANDO O CÓDIGO?</h1>
+                <p style="font-size:1.5rem;">ISSO NÃO É CLEAN, SEU CUSÃO!</p>
+                <button onclick="location.reload()" style="background:red; color:white; border:none; padding:10px 20px; cursor:pointer; font-weight:bold; margin-top:20px;">VOLTAR PRO RP</button>
+            </div>
+        `;
+    }
+}, 1000);
+
+// 4. FUNÇÃO DE LOGIN (ANDREW GALLOWAY ADMIN)
+async function login() {
+    const user = document.getElementById('username').value;
+    const pass = document.getElementById('password').value;
+
+    try {
+        const snapshot = await firebase.database().ref('contas/' + user).once('value');
+        const userData = snapshot.val();
+
+        if (userData && userData.senha === pass) {
+            localStorage.setItem('weazel_user', user);
+            localStorage.setItem('weazel_rank', userData.rank);
+            alert("Acesso autorizado. Fala, chefe!");
+            window.location.href = "editor.html";
+        } else {
+            alert("SAI FORA, CUSÃO! USUÁRIO OU SENHA ERRADOS.");
+        }
+    } catch (error) {
+        console.error("Erro na autenticação");
+    }
+}
     </script>
 </body>
 </html>
