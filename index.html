@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEAZEL FM | Confirming Liberty</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #cc0000;
+            --bg-dark: #0f1014;
+            --card-bg: #1c1e26;
+            --text-gray: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: #e0e0e0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .top-bar {
+            background: rgba(0,0,0,0.8);
+            padding: 10px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2a2d37;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-main img { height: 55px; cursor: pointer; }
+
+        .user-area { display: flex; align-items: center; gap: 25px; }
+
+        .clock-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .login-btn {
+            background: #2a2d37;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 6px 15px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .login-btn:hover { background: var(--primary); border-color: var(--primary); }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding-bottom: 60px; min-height: 60vh; }
+
+        .news-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid #2a2d37;
+            margin-bottom: 40px;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .badge {
+            background: var(--primary);
+            padding: 4px 12px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .card-header {
+            padding: 15px 25px;
+            border-bottom: 1px solid #2a2d37;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-content { padding: 30px; }
+
+        .news-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.5rem;
+            margin: 0 0 10px 0;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .news-meta { color: var(--text-gray); font-size: 0.85rem; margin-bottom: 25px; display: block; }
+
+        .content-body p { line-height: 1.8; font-size: 1.1rem; color: #ccc; margin-bottom: 20px; }
+
+        .news-img { width: 100%; border-radius: 6px; margin: 15px 0 30px 0; border: 1px solid #333; display: block; }
+
+        .editor-section { background: var(--card-bg); padding: 40px; border-radius: 12px; border: 1px solid #333; }
+
+        input, textarea, select {
+            width: 100%;
+            background: #0f1014;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .btn-publish {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .hidden { display: none; }
+        
+        footer { text-align: center; padding: 40px; color: #444; font-size: 0.8rem; border-top: 1px solid #222; }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="logo-main" onclick="window.location.reload()">
+            <img src="ChatGPT Image 12 de mai. de 2026, 15_45_01.png" alt="WEAZEL FM">
+        </div>
+        <div class="user-area">
+            <button class="login-btn" id="auth-btn" onclick="handleAuth()">Acesso Redação</button>
+            <div class="clock-area">
+                <span id="current-time" style="color: #fff; font-size: 1.1rem; font-weight: bold;">00:00</span>
+                <span id="current-date" style="font-size: 0.7rem; letter-spacing: 1px;">DATA</span>
+            </div>
+        </div>
+    </div>
+
+    <nav class="nav-container" id="filter-nav">
+        <button class="nav-btn active" onclick="filterNews('all', this)">📌 Início</button>
+        <button class="nav-btn" onclick="filterNews('Plantão Policial', this)">🚔 Policial</button>
+        <button class="nav-btn" onclick="filterNews('Esportes', this)">🏀 Esportes</button>
+        <button class="nav-btn" onclick="filterNews('Cotidiano', this)">🌆 Cotidiano</button>
+        <button class="nav-btn" onclick="filterNews('Entrevistas', this)">🎙️ Entrevistas</button>
+    </nav>
+
+    <div class="container">
+        <div id="loading" style="text-align: center; margin-top: 50px;">Carregando notícias da cidade...</div>
+        <div id="feed-page"></div>
+
+        <div id="editor-page" class="editor-section hidden">
+            <h2>REDIGIR MATÉRIA - WEAZEL FM</h2>
+            <form id="news-form">
+                <input type="hidden" id="edit-id">
+                <input type="text" id="author" placeholder="Nome do Jornalista" required>
+                <input type="text" id="title" placeholder="Título chamativo da matéria" required>
+                <select id="category">
+                    <option value="Plantão Policial">Plantão Policial</option>
+                    <option value="Esportes">Esportes</option>
+                    <option value="Cotidiano">Cotidiano</option>
+                    <option value="Entrevistas">Entrevistas</option>
+                </select>
+                <textarea id="content" rows="12" placeholder="Conteúdo detalhado. Pule uma linha para intercalar com as imagens." required></textarea>
+                
+                <p style="font-size: 0.8rem; color: var(--text-gray); margin-bottom: 5px;">Links das Imagens (Até 4):</p>
+                <input type="url" id="img1" placeholder="URL da Imagem 1 (Topo)">
+                <input type="url" id="img2" placeholder="URL da Imagem 2 (Meio)">
+                <input type="url" id="img3" placeholder="URL da Imagem 3 (Meio)">
+                <input type="url" id="img4" placeholder="URL da Imagem 4 (Fim)">
+                
+                <button type="submit" class="btn-publish">Publicar no Portal</button>
+                <button type="button" onclick="showPage('feed')" style="background:none; border:none; color:#555; cursor:pointer; width:100%; margin-top:10px">Cancelar e Voltar</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 WEAZEL FM NETWORK - Confirming Your Prejudices.
+    </footer>
+
+    <script>
+        // ==========================================
+        // CONFIGURAÇÕES DO SEU FIREBASE AQUI
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBTYu6dC3Iyz-qtjHKvLaq-B_4qXMb1C4w",
+            authDomain: "weazelfm-dfb2e.firebaseapp.com",
+            databaseURL: "https://weazelfm-dfb2e-default-rtdb.firebaseio.com",
+            projectId: "weazelfm-dfb2e",
+            storageBucket: "weazelfm-dfb2e.firebasestorage.app",
+            messagingSenderId: "70517176119",
+            appId: "1:70517176119:web:523e4e13cfedd0e0018cb2"
+        };
+        // ==========================================
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const newsRef = database.ref('articles');
+
+        let isLogged = false;
+        const PASS = "andrewgalloway";
+
+        // Relógio Real-time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').innerText = now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('current-date').innerText = now.toLocaleDateString('pt-BR', {weekday: 'long', day: 'numeric', month: 'short'}).toUpperCase();
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        function handleAuth() {
+            if (isLogged) {
+                showPage('editor');
+            } else {
+                if (prompt("Credenciais de Jornalista:") === PASS) {
+                    isLogged = true;
+                    document.getElementById('auth-btn').innerText = "Nova Matéria";
+                    showPage('editor');
+                } else { alert("Senha incorreta!"); }
+            }
+        }
+
+        function showPage(page) {
+            document.getElementById('feed-page').classList.toggle('hidden', page !== 'feed');
+            document.getElementById('editor-page').classList.toggle('hidden', page !== 'editor');
+            document.getElementById('filter-nav').classList.toggle('hidden', page !== 'feed');
+            window.scrollTo(0,0);
+        }
+
+        // SALVAR NO FIREBASE
+        document.getElementById('news-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-id').value;
+            const postData = {
+                author: document.getElementById('author').value,
+                title: document.getElementById('title').value,
+                category: document.getElementById('category').value,
+                content: document.getElementById('content').value,
+                images: [
+                    document.getElementById('img1').value,
+                    document.getElementById('img2').value,
+                    document.getElementById('img3').value,
+                    document.getElementById('img4').value
+                ].filter(url => url.trim() !== ""),
+                date: new Date().toLocaleString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'}),
+                timestamp: Date.now()
+            };
+
+            if(id) {
+                database.ref('articles/' + id).set(postData);
+            } else {
+                newsRef.push(postData);
+            }
+
+            this.reset();
+            document.getElementById('edit-id').value = '';
+            showPage('feed');
+        });
+
+        // LER DO FIREBASE EM TEMPO REAL
+        newsRef.on('value', (snapshot) => {
+            document.getElementById('loading').style.display = 'none';
+            const data = snapshot.val();
+            render(data);
+        });
+
+        function render(data, filter = 'all') {
+            const feed = document.getElementById('feed-page');
+            feed.innerHTML = '';
+            
+            if(!data) {
+                feed.innerHTML = `<p style="text-align:center; color:#444; margin-top:80px">Nenhuma notícia disponível ainda.</p>`;
+                return;
+            }
+
+            // Converter objeto em array e ordenar por tempo
+            const articles = Object.keys(data).map(key => ({
+                id: key,
+                ...data[key]
+            })).sort((a, b) => b.timestamp - a.timestamp);
+
+            const filteredData = filter === 'all' ? articles : articles.filter(n => n.category === filter);
+
+            filteredData.forEach(item => {
+                const paragraphs = item.content.split('\n');
+                let contentHtml = '';
+                let imgCount = 0;
+
+                paragraphs.forEach(p => {
+                    if(p.trim()) {
+                        contentHtml += `<p>${p}</p>`;
+                        if(item.images && item.images[imgCount]) {
+                            contentHtml += `<img src="${item.images[imgCount]}" class="news-img">`;
+                            imgCount++;
+                        }
+                    }
+                });
+
+                feed.innerHTML += `
+                    <div class="news-card">
+                        <div class="card-header">
+                            <span class="badge">${item.category}</span>
+                            <span style="font-size:0.75rem; color:#555">${item.date}</span>
+                        </div>
+                        <div class="card-content">
+                            <h1 class="news-title">${item.title}</h1>
+                            <span class="news-meta">Publicado por: <strong style="color:#fff">${item.author}</strong></span>
+                            <div class="content-body">${contentHtml}</div>
+                            ${isLogged ? `
+                                <div style="margin-top:25px; border-top:1px solid #2a2d37; padding-top:15px">
+                                    <button onclick="editPost('${item.id}')" style="background:#444; color:#fff; border:none; padding:6px 12px; cursor:pointer; border-radius:3px">Editar</button>
+                                    <button onclick="deletePost('${item.id}')" style="background:#300; color:#f66; border:none; padding:6px 12px; cursor:pointer; border-radius:3px">Apagar</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterNews(cat, btn) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            newsRef.once('value', (snapshot) => render(snapshot.val(), cat));
+        }
+
+        function deletePost(id) {
+            if(confirm("Deseja deletar esta matéria da WEAZEL FM?")) {
+                database.ref('articles/' + id).remove();
+            }
+        }
+
+        function editPost(id) {
+            database.ref('articles/' + id).once('value', (snapshot) => {
+                const p = snapshot.val();
+                document.getElementById('edit-id').value = id;
+                document.getElementById('author').value = p.author;
+                document.getElementById('title').value = p.title;
+                document.getElementById('category').value = p.category;
+                document.getElementById('content').value = p.content;
+                document.getElementById('img1').value = p.images[0] || '';
+                document.getElementById('img2').value = p.images[1] || '';
+                document.getElementById('img3').value = p.images[2] || '';
+                document.getElementById('img4').value = p.images[3] || '';
+                showPage('editor');
+            });
+        }
+    </script>
+</body>
+</html>
