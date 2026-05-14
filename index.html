@@ -226,6 +226,7 @@
         <button class="nav-btn" onclick="filterNews('Esportes', this)">🏀 Esportes</button>
         <button class="nav-btn" onclick="filterNews('Cotidiano', this)">🌆 Cotidiano</button>
         <button class="nav-btn" onclick="filterNews('Entrevistas', this)">🎙️ Entrevistas</button>
+        <button class="nav-btn" onclick="filterNews('Opinião', this)">✍️ Opinião</button>
     </nav>
 
     <div class="container">
@@ -262,6 +263,7 @@
                     <option value="Esportes">Esportes</option>
                     <option value="Cotidiano">Cotidiano</option>
                     <option value="Entrevistas">Entrevistas</option>
+                    <option value="Opinião">Opinião</option>
                 </select>
                 <textarea id="content" rows="12" placeholder="Conteúdo detalhado..." required></textarea>
                 <input type="url" id="img1" placeholder="URL da Imagem 1 (Topo)">
@@ -275,7 +277,7 @@
         </div>
     </div>
 
-    <footer>&copy; TODO MATERIAL DEVE SER LEVADO COMO CONTEÚDO IC (IN CHARACTER)! PARA MAIS INFORMAÇÕES: discord.gg/hoodlifels.</footer>
+    <footer>&copy; 2026 WEAZEL FM NETWORK - Confirming Your Prejudices.</footer>
 
     <script>
         const firebaseConfig = {
@@ -296,6 +298,17 @@
         let loggedUser = "";
         const PASS = "andrewgallowaywfm";
 
+        // Verifica se já existe login salvo na sessão ao carregar a página
+        window.onload = function() {
+            const savedUser = sessionStorage.getItem('weazel_user');
+            if(savedUser) {
+                isLogged = true;
+                loggedUser = savedUser;
+                document.getElementById('auth-btn').innerText = loggedUser.toUpperCase();
+                document.getElementById('author').value = loggedUser;
+            }
+        }
+
         function updateTime() {
             const now = new Date();
             document.getElementById('current-time').innerText = now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
@@ -314,9 +327,9 @@
                     if (nameInput) {
                         isLogged = true;
                         loggedUser = nameInput;
+                        sessionStorage.setItem('weazel_user', loggedUser); // Salva na sessão
                         document.getElementById('auth-btn').innerText = loggedUser.toUpperCase();
                         document.getElementById('author').value = loggedUser;
-                        // Atualiza feed para mostrar botões de admin
                         newsRef.once('value', s => render(s.val()));
                         showPage('editor');
                     }
@@ -385,7 +398,6 @@
 
             this.reset();
             document.getElementById('edit-id').value = '';
-            // Se for autor logado, mantém o nome dele no campo para a próxima
             if(isLogged) document.getElementById('author').value = loggedUser;
             showPage('feed');
         });
@@ -457,7 +469,6 @@
             });
         }
 
-        // Proteções de Segurança
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = function(e) {
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) {
