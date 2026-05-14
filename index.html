@@ -394,6 +394,28 @@
                 showPage('editor');
             });
         }
+// Bloqueio de Teclas e F12
+document.onkeydown = function(e) {
+    if (e.keyCode == 123 || 
+        (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) ||
+        (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
+        
+        console.clear();
+        console.log("%cAPERTAR F12 PRA VER O CÓDIGO NÃO É CLEAN, SEU CUSÃO!", "color: red; font-size: 30px; font-weight: bold; text-shadow: 2px 2px black;");
+        alert("APERTAR F12 PRA VER O CÓDIGO NÃO É CLEAN, SEU CUSÃO!");
+        return false;
+    }
+};
+
+// Trava o Console se conseguirem abrir por outros meios
+setInterval(function() {
+    const before = new Date().getTime();
+    debugger;
+    const after = new Date().getTime();
+    if (after - before > 100) {
+        document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%'>O CÓDIGO NÃO É CLEAN, SEU CUSÃO!</h1>";
+    }
+}, 100);
     </script>
 </body>
 </html>
