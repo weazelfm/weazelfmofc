@@ -1,0 +1,7 @@
+const loggedUser = localStorage.getItem('weazel_user');
+const userRank = localStorage.getItem('weazel_rank');
+
+if (loggedUser === "andrewgalloway" || userRank === "dono") {
+    // Mostra ferramentas de ADM (como o botão de ADD USER)
+    document.getElementById('admin-tools').classList.remove('hidden');
+}
