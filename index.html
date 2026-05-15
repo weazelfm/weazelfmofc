@@ -53,7 +53,7 @@
         .admin-btn-edit { background: #0044cc; color: white; border: none; padding: 4px 8px; font-size: 0.65rem; cursor: pointer; border-radius: 3px; margin-top: 5px; font-family: 'Oswald'; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
 
     <div class="top-bar">
         <div class="logo-main" onclick="window.location.reload()"><img src="ChatGPT Image 12 de mai. de 2026, 15_45_01.png"></div>
@@ -152,13 +152,32 @@
         const db = firebase.database();
         
         let isLogged = false, loggedUser = sessionStorage.getItem('weazel_user') || "", fontSize = 1.1, currentCategory = 'all';
+        
+      // BLOQUEIO TOTAL: F12, CTRL+U, INSPEÇÃO E BOTÃO DIREITO
+window.addEventListener('contextmenu', e => e.preventDefault());
 
-        // TRAVA F12, CONTROL U, CONTROL SHIFT I
-        document.onkeydown = function(e) {
-            if(e.keyCode == 123) return false;
-            if(e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
-            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
-        };
+window.addEventListener('keydown', e => {
+    // Bloqueia F12
+    if (e.key === "F12" || e.keyCode === 123) {
+        e.preventDefault();
+        return false;
+    }
+
+    // Bloqueia Ctrl+U (Source) e Ctrl+S (Salvar)
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 's' || e.keyCode === 85 || e.keyCode === 83)) {
+        e.preventDefault();
+        return false;
+    }
+
+    // Bloqueia Ctrl+Shift+I, J, C (Inspeção)
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) {
+        e.preventDefault();
+        return false;
+    }
+}, { capture: true });
+
+// Bloqueia seleção de texto para dificultar cópia
+document.onselectstart = () => false;
 
         if(loggedUser) { isLogged = true; document.getElementById('auth-btn').innerText = loggedUser.toUpperCase(); }
 
