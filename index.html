@@ -14,59 +14,54 @@
         :root { --primary: #cc0000; --bg-dark: #0f1014; --card-bg: #1c1e26; --text-gray: #a0a0a0; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: #e0e0e0; margin: 0; overflow-x: hidden; }
         
-        /* BARRA SUPERIOR */
         .top-bar { background: rgba(0,0,0,0.9); padding: 10px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2d37; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
         .logo-main img { height: 55px; cursor: pointer; }
         .user-area { display: flex; align-items: center; gap: 25px; }
         .login-btn { background: #2a2d37; color: #fff; border: 1px solid #444; padding: 6px 15px; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; font-weight: bold; }
         .login-btn:hover { background: var(--primary); border-color: var(--primary); }
 
-        /* LAYOUT PRINCIPAL */
         .main-layout { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 320px; gap: 30px; padding: 0 20px; }
         .sidebar { padding-top: 20px; position: relative; }
         .sidebar-widget { background: var(--card-bg); border: 1px solid #2a2d37; border-radius: 8px; padding: 20px; margin-bottom: 30px; }
         .widget-title { font-family: 'Oswald'; text-transform: uppercase; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px; font-size: 1.2rem; }
         
-        /* PROCURADOS E HOVER FICHA CRIMINAL */
         .procurado-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #2a2d37; padding-bottom: 10px; position: relative; }
-        .procurado-img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; background: #000; cursor: pointer; }
+        .procurado-img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; background: #000; cursor: help; }
         .procurado-info h4 { margin: 0; font-size: 0.9rem; font-family: 'Oswald'; }
         .procurado-status { font-size: 0.7rem; color: #ff4444; font-weight: bold; text-transform: uppercase; }
         
-        /* A MÁGICA DA FICHA AQUI */
-        .ficha-hover { display: none; position: absolute; right: calc(100% + 20px); top: 0; background: #0a0a0c; border: 2px solid var(--primary); padding: 15px; width: 250px; z-index: 9999; border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.9); font-size: 0.8rem; pointer-events: none; }
-        .ficha-hover::after { content: ''; position: absolute; top: 20px; right: -12px; border-width: 6px; border-style: solid; border-color: transparent transparent transparent var(--primary); }
+        .ficha-hover { display: none; position: absolute; right: calc(100% + 20px); top: 0; background: #0a0a0c; border: 2px solid var(--primary); padding: 15px; width: 250px; z-index: 9999; border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.9); font-size: 0.8rem; pointer-events: none; text-align: left; }
         .procurado-item:hover .ficha-hover { display: block; animation: fadeIn 0.2s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
         .ficha-hover p { margin: 5px 0; color: #ccc; }
-        .ficha-hover b { color: #fff; font-family: 'Oswald'; letter-spacing: 0.5px; }
+        .ficha-hover b { color: #fff; font-family: 'Oswald'; }
 
-        .anuncio-img { width: 100%; border-radius: 4px; border: 1px solid #333; margin-bottom: 10px; }
+        .anuncio-img { width: 100%; border-radius: 4px; border: 1px solid #333; margin-bottom: 10px; cursor: default; }
 
-        /* NAVEGAÇÃO E CARDS DE NOTÍCIA */
         .nav-container { max-width: 1200px; margin: 30px auto; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .nav-btn { background: var(--card-bg); border: 1px solid #333; color: #fff; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-family: 'Oswald'; text-transform: uppercase; transition: 0.2s; }
         .nav-btn.active, .nav-btn:hover { background: var(--primary); border-color: var(--primary); }
+        
         .news-card { background: var(--card-bg); border-radius: 10px; border: 1px solid #2a2d37; margin-bottom: 30px; overflow: hidden; cursor: pointer; transition: 0.2s; }
         .news-card:hover { border-color: var(--primary); }
         .destaque-card { grid-column: 1 / -1; display: flex; border: 2px solid var(--primary); background: linear-gradient(90deg, #1c1e26 0%, #000 100%); }
         .destaque-card .news-title { font-size: 3.2rem !important; }
+        
         .badge { background: var(--primary); padding: 4px 12px; border-radius: 3px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; font-family: 'Oswald'; }
         .news-title { font-family: 'Oswald'; font-size: 1.8rem; margin: 10px 0; color: #fff; line-height: 1.1; }
         
         .font-controls { margin-bottom: 20px; display: flex; gap: 10px; align-items: center; }
         .btn-font { background: #333; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-family: 'Oswald'; font-size: 0.8rem; }
 
-        /* EDITOR E TABS */
         .editor-section { background: var(--card-bg); padding: 40px; border-radius: 12px; border: 1px solid #333; }
         .editor-tabs { display: flex; gap: 10px; margin-bottom: 25px; }
         .tab-btn { flex: 1; padding: 12px; background: #111; color: #666; border: 1px solid #333; cursor: pointer; font-family: 'Oswald'; text-transform: uppercase; font-weight: bold; }
         .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        input, textarea, select { width: 100%; background: #0f1014; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 4px; margin-bottom: 12px; box-sizing: border-box; font-family: 'Inter'; }
+        input, textarea, select { width: 100%; background: #0f1014; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 4px; margin-bottom: 12px; box-sizing: border-box; }
         .btn-publish { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; font-weight: 800; text-transform: uppercase; cursor: pointer; border-radius: 4px; font-family: 'Oswald'; font-size: 1.1rem; }
         
-        .hidden { display: none; }
+        .hidden { display: none !important; }
         .admin-btn-del { background: #600; color: white; border: none; padding: 4px 8px; font-size: 0.65rem; cursor: pointer; border-radius: 3px; margin-top: 8px; font-family: 'Oswald'; text-transform: uppercase; }
         footer { text-align: center; padding: 40px; color: #444; font-size: 0.8rem; border-top: 1px solid #222; }
         .news-img-full { width: 100%; border-radius: 8px; margin: 25px 0; border: 1px solid #333; }
@@ -97,7 +92,9 @@
 
     <div class="main-layout">
         <main>
-            <div id="pagina-home"><div id="feed-page"></div></div>
+            <div id="pagina-home">
+                <div id="feed-page"></div>
+            </div>
 
             <div id="pagina-noticia-aberta" class="hidden">
                 <div class="font-controls">
@@ -105,7 +102,7 @@
                     <button class="btn-font" onclick="changeFontSize(-0.1)">A-</button>
                     <button class="btn-font" onclick="voltarHome()" style="background:var(--primary); margin-left:auto">VOLTAR PARA HOME</button>
                 </div>
-                <div class="news-card" style="cursor: default; padding: 45px;" id="texto-noticia">
+                <div class="news-card" style="cursor: default; padding: 45px;">
                     <div id="conteudo-aberto"></div>
                 </div>
             </div>
@@ -113,8 +110,8 @@
             <div id="editor-page" class="editor-section hidden">
                 <div class="editor-tabs">
                     <button class="tab-btn active" onclick="switchTab('noticia')">Postar Notícia</button>
-                    <button class="tab-btn" onclick="switchTab('anuncio')">Gerenciar Anúncios</button>
-                    <button class="tab-btn" onclick="switchTab('procurado')">Lista de Procurados</button>
+                    <button class="tab-btn" onclick="switchTab('anuncio')">Anúncios</button>
+                    <button class="tab-btn" onclick="switchTab('procurado')">Procurados</button>
                 </div>
 
                 <form id="form-noticia">
@@ -126,37 +123,30 @@
                         <option value="Opinião">Opinião</option>
                     </select>
                     <textarea id="content" rows="10" placeholder="Escreva a matéria aqui..." required></textarea>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <input type="url" id="img1" placeholder="URL Imagem 1 (Principal)">
-                        <input type="url" id="img2" placeholder="URL Imagem 2">
-                        <input type="url" id="img3" placeholder="URL Imagem 3">
-                        <input type="url" id="img4" placeholder="URL Imagem 4">
-                    </div>
+                    <input type="url" id="img1" placeholder="URL Imagem Principal">
                     <button type="submit" class="btn-publish">Publicar Matéria</button>
                 </form>
 
                 <form id="form-anuncio" class="hidden">
-                    <input type="text" id="ad-title" placeholder="Nome da Empresa/Anunciante" required>
-                    <input type="url" id="ad-img" placeholder="URL do Banner do Anúncio" required>
-                    <input type="url" id="ad-link" placeholder="Link de Destino (Opcional)">
+                    <input type="text" id="ad-title" placeholder="Empresa" required>
+                    <input type="url" id="ad-img" placeholder="URL Banner" required>
                     <button type="submit" class="btn-publish">Salvar Anúncio</button>
                 </form>
 
                 <form id="form-procurado" class="hidden">
-                    <input type="hidden" id="edit-id-w"> <input type="text" id="w-name" placeholder="Nome do Criminoso" required>
-                    <input type="text" id="w-status" placeholder="Status (Ex: Procurado / Morto / Preso)" required>
-                    <input type="url" id="w-img" placeholder="URL da Foto (Rosto)">
-                    <hr style="border:0; border-top:1px solid #333; margin:15px 0">
-                    <input type="text" id="w-crime" placeholder="Crime Cometido" required>
-                    <input type="text" id="w-desc" placeholder="Descrição Física (Ex: Tatuagem no rosto, careca...)">
-                    <input type="text" id="w-loc" placeholder="Última Localização Conhecida">
-                    <input type="text" id="w-reward" placeholder="Recompensa ($)">
-                    <textarea id="w-obs" rows="3" placeholder="Observações e avisos da polícia..."></textarea>
-                    
-                    <button type="submit" id="btn-save-w" class="btn-publish">Adicionar à Lista</button>
+                    <input type="hidden" id="edit-id-w">
+                    <input type="text" id="w-name" placeholder="Nome" required>
+                    <input type="text" id="w-status" placeholder="Status (Ex: Procurado)">
+                    <input type="url" id="w-img" placeholder="URL Foto">
+                    <input type="text" id="w-crime" placeholder="Crime">
+                    <input type="text" id="w-desc" placeholder="Descrição Física">
+                    <input type="text" id="w-loc" placeholder="Última Localização">
+                    <input type="text" id="w-reward" placeholder="Recompensa">
+                    <textarea id="w-obs" placeholder="Observações"></textarea>
+                    <button type="submit" id="btn-save-w" class="btn-publish">Salvar Ficha</button>
                 </form>
 
-                <button type="button" onclick="showPage('feed')" class="login-btn" style="width:100%; margin-top:20px; background:#333">Sair do Painel</button>
+                <button type="button" onclick="voltarHome()" class="login-btn" style="width:100%; margin-top:20px; background:#333">Sair do Painel</button>
             </div>
         </main>
 
@@ -165,7 +155,6 @@
                 <div class="widget-title">📢 ANUNCIE AQUI:</div>
                 <div id="ads-container"></div>
             </div>
-
             <div class="sidebar-widget">
                 <div class="widget-title">🚔 PROCURADOS:</div>
                 <div id="wanted-container"></div>
@@ -173,7 +162,7 @@
         </aside>
     </div>
 
-    <footer>&copy; ESTE WEBSITE É TOTALMENTE IC (IN CHARACTER). PARA MAIS INFORMAÇÕES: discord.gg/hoodlifels.</footer>
+    <footer>&copy; ESTE WEBSITE É TOTALMENTE IC. discord.gg/hoodlifels</footer>
 
     <script>
         const firebaseConfig = {
@@ -207,7 +196,7 @@
             else {
                 const p = prompt("Senha da Redação:");
                 if (p === PASS) {
-                    const n = prompt("Seu Nome de Jornalista:");
+                    const n = prompt("Seu Nome:");
                     if (n) {
                         isLogged = true; loggedUser = n;
                         sessionStorage.setItem('weazel_user', n);
@@ -218,49 +207,42 @@
             }
         }
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById('form-noticia').classList.toggle('hidden', tab !== 'noticia');
-            document.getElementById('form-anuncio').classList.toggle('hidden', tab !== 'anuncio');
-            document.getElementById('form-procurado').classList.toggle('hidden', tab !== 'procurado');
-        }
-
         function showPage(page) {
-            document.getElementById('pagina-home').classList.toggle('hidden', page !== 'feed');
+            document.getElementById('pagina-home').classList.add('hidden');
             document.getElementById('pagina-noticia-aberta').classList.add('hidden');
-            document.getElementById('editor-page').classList.toggle('hidden', page !== 'editor');
-            // Só esconde a sidebar se estiver lendo notícia grande
-            document.getElementById('main-sidebar').classList.toggle('hidden', page === 'aberta');
+            document.getElementById('editor-page').classList.add('hidden');
+            document.getElementById('main-sidebar').classList.remove('hidden');
+
+            if(page === 'feed') document.getElementById('pagina-home').classList.remove('hidden');
+            if(page === 'aberta') {
+                document.getElementById('pagina-noticia-aberta').classList.remove('hidden');
+                document.getElementById('main-sidebar').classList.add('hidden');
+            }
+            if(page === 'editor') {
+                document.getElementById('editor-page').classList.remove('hidden');
+                document.getElementById('main-sidebar').classList.add('hidden');
+            }
             window.scrollTo(0,0);
         }
 
-        function changeFontSize(v) {
-            fontSize += v;
-            document.getElementById('conteudo-aberto').style.fontSize = fontSize + 'rem';
+        function switchTab(tab) {
+            document.getElementById('form-noticia').classList.add('hidden');
+            document.getElementById('form-anuncio').classList.add('hidden');
+            document.getElementById('form-procurado').classList.add('hidden');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            if(tab === 'noticia') document.getElementById('form-noticia').classList.remove('hidden');
+            if(tab === 'anuncio') document.getElementById('form-anuncio').classList.remove('hidden');
+            if(tab === 'procurado') document.getElementById('form-procurado').classList.remove('hidden');
+            event.target.classList.add('active');
         }
 
-        // --- NOTÍCIAS ---
-        document.getElementById('form-noticia').onsubmit = function(e) {
-            e.preventDefault();
-            const imgs = [
-                document.getElementById('img1').value, document.getElementById('img2').value,
-                document.getElementById('img3').value, document.getElementById('img4').value
-            ].filter(url => url.trim() !== "");
-
-            db.ref('articles').push({
-                title: document.getElementById('title').value,
-                category: document.getElementById('category').value,
-                content: document.getElementById('content').value,
-                images: imgs, author: loggedUser,
-                date: new Date().toLocaleString('pt-BR'), timestamp: Date.now()
-            });
-            this.reset(); alert("Matéria enviada com sucesso!");
-        };
-
+        // CARREGAR NOTICIAS
         db.ref('articles').on('value', s => {
             const feed = document.getElementById('feed-page'); feed.innerHTML = '';
-            const items = Object.keys(s.val() || {}).map(k => ({id:k, ...s.val()[k]})).sort((a,b)=>b.timestamp - a.timestamp);
+            const data = s.val();
+            if(!data) return;
+            const items = Object.keys(data).map(k => ({id:k, ...data[k]})).sort((a,b)=>b.timestamp - a.timestamp);
             items.forEach((item, i) => {
                 const isDest = i === 0;
                 feed.innerHTML += `
@@ -268,9 +250,8 @@
                         <div style="padding:30px; flex: 1;">
                             <span class="badge">${item.category}</span>
                             <h2 class="news-title">${item.title}</h2>
-                            <p style="color:#aaa; line-height: 1.5;">${item.content.substring(0, isDest ? 280 : 120)}...</p>
-                            <span style="font-size:0.75rem; color:#555">Por ${item.author} | ${item.date}</span>
-                            ${isLogged ? `<br><button class="admin-btn-del" onclick="event.stopPropagation(); if(confirm('Apagar?')) db.ref('articles/${item.id}').remove()">Apagar Matéria</button>` : ''}
+                            <p style="color:#aaa">${item.content.substring(0, 150)}...</p>
+                            ${isLogged ? `<button class="admin-btn-del" onclick="event.stopPropagation(); db.ref('articles/${item.id}').remove()">Apagar</button>` : ''}
                         </div>
                     </div>`;
             });
@@ -279,84 +260,73 @@
         function abrirMateria(id) {
             db.ref('articles/'+id).once('value', s => {
                 const item = s.val();
-                let layoutHtml = `
+                let html = `
                     <span class="badge">${item.category}</span>
-                    <h1 class="news-title" style="font-size:3.5rem; margin-bottom:10px">${item.title}</h1>
-                    <p style="color:#666; font-size:0.9rem">Publicado por <b>${item.author}</b> em ${item.date}</p>
-                    <hr style="border:0; border-top:1px solid #333; margin:30px 0">
-                    <div id="corpo-texto">`;
+                    <h1 class="news-title" style="font-size:3rem">${item.title}</h1>
+                    <p style="color:#666">Por ${item.author} em ${item.date}</p>
+                    <hr style="border:0; border-top:1px solid #333; margin:20px 0">`;
                 
-                const paragraphs = item.content.split('\n');
-                let imgIdx = 0;
-                paragraphs.forEach((p, i) => {
-                    if(p.trim()) {
-                        layoutHtml += `<p>${p}</p>`;
-                        if(item.images && item.images[imgIdx]) {
-                            layoutHtml += `<img src="${item.images[imgIdx]}" class="news-img-full">`;
-                            imgIdx++;
-                        }
-                    }
-                });
-
-                layoutHtml += `</div>`;
-                document.getElementById('conteudo-aberto').innerHTML = layoutHtml;
-                document.getElementById('conteudo-aberto').style.fontSize = fontSize + 'rem';
+                if(item.images && item.images[0]) html += `<img src="${item.images[0]}" class="news-img-full">`;
+                
+                html += `<div style="line-height:1.6">${item.content.replace(/\n/g, '<br>')}</div>`;
+                document.getElementById('conteudo-aberto').innerHTML = html;
                 showPage('aberta');
             });
         }
 
-        // --- ANÚNCIOS ---
+        function filterNews(c, b) {
+            document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
+            b.classList.add('active');
+            db.ref('articles').once('value', s => {
+                const feed = document.getElementById('feed-page'); feed.innerHTML = '';
+                const items = Object.keys(s.val() || {}).map(k => ({id:k, ...s.val()[k]})).sort((a,b)=>b.timestamp - a.timestamp);
+                const filtered = c === 'all' ? items : items.filter(a => a.category === c);
+                filtered.forEach(item => {
+                    feed.innerHTML += `
+                        <div class="news-card" onclick="abrirMateria('${item.id}')">
+                            <div style="padding:30px;">
+                                <span class="badge">${item.category}</span>
+                                <h2 class="news-title">${item.title}</h2>
+                                <p style="color:#aaa">${item.content.substring(0, 100)}...</p>
+                            </div>
+                        </div>`;
+                });
+                showPage('feed');
+            });
+        }
+
+        // ANUNCIOS
         document.getElementById('form-anuncio').onsubmit = function(e) {
             e.preventDefault();
-            db.ref('ads').push({
-                img: document.getElementById('ad-img').value,
-                link: document.getElementById('ad-link').value || '#'
-            });
-            this.reset(); alert("Anúncio cadastrado!");
+            db.ref('ads').push({ img: document.getElementById('ad-img').value });
+            this.reset(); alert("Anúncio salvo!");
         };
 
         db.ref('ads').on('value', s => {
-    const cont = document.getElementById('ads-container'); 
-    cont.innerHTML = '';
-    Object.keys(s.val() || {}).forEach(k => {
-        const a = s.val()[k];
-        cont.innerHTML += `
-            <div style="margin-bottom:20px; cursor: default;">
-                <img src="${a.img}" class="anuncio-img">
-                ${isLogged ? `<button class="admin-btn-del" onclick="db.ref('ads/${k}').remove()">Remover Anúncio</button>` : ''}
-            </div>`;
-    });
-});
+            const cont = document.getElementById('ads-container'); cont.innerHTML = '';
+            Object.keys(s.val() || {}).forEach(k => {
+                const a = s.val()[k];
+                cont.innerHTML += `<div style="margin-bottom:15px;">
+                    <img src="${a.img}" class="anuncio-img">
+                    ${isLogged ? `<button class="admin-btn-del" onclick="db.ref('ads/${k}').remove()">Remover</button>` : ''}
+                </div>`;
+            });
+        });
 
-        // --- PROCURADOS (CRIAR E ATUALIZAR) ---
+        // PROCURADOS
         document.getElementById('form-procurado').onsubmit = function(e) {
             e.preventDefault();
             const id = document.getElementById('edit-id-w').value;
             const data = {
-                name: document.getElementById('w-name').value,
-                status: document.getElementById('w-status').value,
-                img: document.getElementById('w-img').value || 'https://via.placeholder.com/55',
-                crime: document.getElementById('w-crime').value,
-                desc: document.getElementById('w-desc').value,
-                loc: document.getElementById('w-loc').value,
-                reward: document.getElementById('w-reward').value,
-                obs: document.getElementById('w-obs').value
+                name: document.getElementById('w-name').value, status: document.getElementById('w-status').value,
+                img: document.getElementById('w-img').value, crime: document.getElementById('w-crime').value,
+                desc: document.getElementById('w-desc').value, loc: document.getElementById('w-loc').value,
+                reward: document.getElementById('w-reward').value, obs: document.getElementById('w-obs').value
             };
-
-            if(id) {
-                db.ref('wanted/' + id).update(data);
-                alert("Ficha atualizada com sucesso!");
-            } else {
-                db.ref('wanted').push(data);
-                alert("Meliante adicionado à lista!");
-            }
-            
-            this.reset();
-            document.getElementById('edit-id-w').value = "";
-            document.getElementById('btn-save-w').innerText = "Adicionar à Lista";
+            if(id) db.ref('wanted/'+id).update(data); else db.ref('wanted').push(data);
+            this.reset(); document.getElementById('edit-id-w').value = ""; alert("Ficha salva!");
         };
 
-        // --- RENDERIZAR PROCURADOS E HOVER ---
         db.ref('wanted').on('value', s => {
             const cont = document.getElementById('wanted-container'); cont.innerHTML = '';
             Object.keys(s.val() || {}).forEach(k => {
@@ -367,75 +337,42 @@
                         <div class="procurado-info">
                             <h4>${w.name}</h4>
                             <div class="procurado-status">${w.status}</div>
-                            ${isLogged ? `
-                                <div style="display:flex; gap:5px; margin-top:5px;">
-                                    <button class="admin-btn-del" style="background:#2196F3;" onclick="prepararEdicaoProcurado('${k}')">Editar</button>
-                                    <button class="admin-btn-del" onclick="if(confirm('Apagar ficha?')) db.ref('wanted/${k}').remove()">Remover</button>
-                                </div>
-                            ` : ''}
+                            ${isLogged ? `<button class="admin-btn-del" onclick="prepararEdicao('${k}')">Editar</button>` : ''}
                         </div>
-                        
                         <div class="ficha-hover">
-                            <h4 style="color:var(--primary); font-family:'Oswald'; border-bottom:1px solid #333; padding-bottom:5px; margin-top:0;">📋 FICHA CRIMINAL</h4>
-                            <p><b>CRIME:</b> ${w.crime || 'Não informado'}</p>
-                            <p><b>CARACTERÍSTICAS:</b> ${w.desc || 'N/A'}</p>
-                            <p><b>ÚLT. VISTO:</b> ${w.loc || 'Desconhecida'}</p>
-                            <p><b>RECOMPENSA:</b> <span style="color:#ffd700">${w.reward || 'Nenhuma'}</span></p>
-                            <p><b>OBSERVAÇÕES:</b> ${w.obs || 'Nenhuma nota adicional.'}</p>
+                            <b>CRIME:</b> ${w.crime || 'N/A'}<br>
+                            <b>DESC:</b> ${w.desc || 'N/A'}<br>
+                            <b>LOC:</b> ${w.loc || 'N/A'}<br>
+                            <b>RECOMPENSA:</b> <span style="color:#ffd700">${w.reward || 'N/A'}</span>
                         </div>
                     </div>`;
             });
         });
 
-        // --- FUNÇÃO PARA JOGAR DADOS PRO FORMULÁRIO DE EDIÇÃO ---
-        window.prepararEdicaoProcurado = function(id) {
-            db.ref('wanted/' + id).once('value', s => {
+        function prepararEdicao(id) {
+            db.ref('wanted/'+id).once('value', s => {
                 const w = s.val();
                 document.getElementById('edit-id-w').value = id;
-                document.getElementById('w-name').value = w.name || '';
-                document.getElementById('w-status').value = w.status || '';
-                document.getElementById('w-img').value = w.img || '';
-                document.getElementById('w-crime').value = w.crime || '';
-                document.getElementById('w-desc').value = w.desc || '';
-                document.getElementById('w-loc').value = w.loc || '';
-                document.getElementById('w-reward').value = w.reward || '';
-                document.getElementById('w-obs').value = w.obs || '';
-                
-                document.getElementById('btn-save-w').innerText = "Atualizar Ficha";
-                
-                // Força a aba e página corretas abrirem
-                showPage('editor');
-                document.querySelectorAll('.tab-btn')[2].click(); // Clica na aba Procurados
-                window.scrollTo(0,0);
+                document.getElementById('w-name').value = w.name;
+                // Preencher o resto...
+                showPage('editor'); switchTab('procurado');
             });
         }
 
-        function voltarHome() { showPage('feed'); }
-        
-        function filterNews(c, b) {
-            document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
-            b.classList.add('active');
-            db.ref('articles').once('value', s => {
-                const data = s.val();
-                const feed = document.getElementById('feed-page'); feed.innerHTML = '';
-                if(!data) return;
-                const items = Object.keys(data).map(k => ({id:k, ...data[k]})).sort((a,b)=>b.timestamp - a.timestamp);
-                const filtered = c === 'all' ? items : items.filter(a => a.category === c);
-                filtered.forEach((item, i) => {
-                    const isDest = c === 'all' && i === 0;
-                    feed.innerHTML += `
-                        <div class="news-card ${isDest ? 'destaque-card' : ''}" onclick="abrirMateria('${item.id}')">
-                            <div style="padding:30px; flex: 1;">
-                                <span class="badge">${item.category}</span>
-                                <h2 class="news-title">${item.title}</h2>
-                                <p style="color:#aaa; line-height:1.5;">${item.content.substring(0, isDest ? 280 : 120)}...</p>
-                                <span style="font-size:0.75rem; color:#555">Por ${item.author} | ${item.date}</span>
-                                ${isLogged ? `<br><button class="admin-btn-del" onclick="event.stopPropagation(); if(confirm('Apagar?')) db.ref('articles/${item.id}').remove()">Apagar</button>` : ''}
-                            </div>
-                        </div>`;
-                });
+        document.getElementById('form-noticia').onsubmit = function(e) {
+            e.preventDefault();
+            db.ref('articles').push({
+                title: document.getElementById('title').value,
+                category: document.getElementById('category').value,
+                content: document.getElementById('content').value,
+                images: [document.getElementById('img1').value],
+                author: loggedUser, date: new Date().toLocaleDateString(), timestamp: Date.now()
             });
-        }
+            this.reset(); alert("Postado!");
+        };
+
+        function voltarHome() { showPage('feed'); }
+        function changeFontSize(v) { fontSize += v; document.getElementById('conteudo-aberto').style.fontSize = fontSize + 'rem'; }
     </script>
 </body>
 </html>
