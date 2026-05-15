@@ -340,7 +340,10 @@ document.onselectstart = () => false;
         });
 
         function voltarHome() { showPage('feed'); }
-        function changeFontSize(v) { fontSize += v; document.getElementById('conteudo-aberto').style.fontSize = fontSize + 'rem'; }
+        function changeFontSize(v) {
+    fontSize += v;
+    document.querySelector('#conteudo-aberto .content-body').style.fontSize = fontSize + 'rem';
+}
     </script>
 </body>
 </html>
