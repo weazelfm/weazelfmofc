@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weazel FM, A rádio da cidade</title>
     <link rel="icon" type="image/png" href="ChatGPT Image 12 de mai. de 2026, 15_45_01.png">
+    
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <div class="logo-main" onclick="window.location.reload()">
+    
     <style>
         :root { --primary: #cc0000; --bg-dark: #0f1014; --card-bg: #1c1e26; --text-gray: #a0a0a0; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: #e0e0e0; margin: 0; overflow-x: hidden; }
@@ -228,7 +229,7 @@
             document.getElementById('conteudo-aberto').style.fontSize = fontSize + 'rem';
         }
 
-        // --- NOTÍCIAS (4 IMAGENS) ---
+        // --- NOTÍCIAS ---
         document.getElementById('form-noticia').onsubmit = function(e) {
             e.preventDefault();
             const imgs = [
@@ -283,7 +284,6 @@
                 paragraphs.forEach((p, i) => {
                     if(p.trim()) {
                         layoutHtml += `<p>${p}</p>`;
-                        // Distribui as imagens entre os parágrafos
                         if(item.images && item.images[imgIdx]) {
                             layoutHtml += `<img src="${item.images[imgIdx]}" class="news-img-full">`;
                             imgIdx++;
@@ -352,14 +352,14 @@
 
         function voltarHome() { showPage('feed'); document.getElementById('main-sidebar').classList.remove('hidden'); }
         
-        // Filtros
         function filterNews(c, b) {
             document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
             b.classList.add('active');
             db.ref('articles').once('value', s => {
                 const data = s.val();
                 const feed = document.getElementById('feed-page'); feed.innerHTML = '';
-                const items = Object.keys(data || {}).map(k => ({id:k, ...data[k]})).sort((a,b)=>b.timestamp - a.timestamp);
+                if(!data) return;
+                const items = Object.keys(data).map(k => ({id:k, ...data[k]})).sort((a,b)=>b.timestamp - a.timestamp);
                 const filtered = c === 'all' ? items : items.filter(a => a.category === c);
                 filtered.forEach((item, i) => {
                     const isDest = c === 'all' && i === 0;
