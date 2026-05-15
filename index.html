@@ -139,6 +139,7 @@
     </div>
 
     <script>
+        // CONFIGURAÇÃO FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyBTYu6dC3Iyz-qtjHKvLaq-B_4qXMb1C4w",
             authDomain: "weazelfm-dfb2e.firebaseapp.com",
@@ -151,7 +152,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // CONFIGURAÇÕES DE ACESSO
+        // CONTROLE DE ACESSO
         const credenciais = {
             "andrewgallowaywfm": { nome: "Bruno Barbosa", cargo: "admin" },
             "editor123": { nome: "Redator", cargo: "editor" }
@@ -163,7 +164,7 @@
         let fontSize = 1.1;
         let currentCategory = 'all';
 
-        // BLOQUEIO TOTAL
+        // BLOQUEIO DE SEGURANÇA
         window.addEventListener('contextmenu', e => e.preventDefault());
         window.addEventListener('keydown', e => {
             if (e.key === "F12" || e.keyCode === 123) e.preventDefault();
@@ -176,6 +177,7 @@
             document.getElementById('auth-btn').innerText = loggedUser.toUpperCase(); 
         }
 
+        // RELÓGIO
         function updateTime() {
             const now = new Date();
             document.getElementById('current-time').innerText = now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
@@ -183,10 +185,11 @@
         }
         setInterval(updateTime, 1000); updateTime();
 
+        // LOGIN
         function handleAuth() {
             if(isLogged) showPage('editor');
             else {
-                const p = prompt("Senha:");
+                const p = prompt("Senha de Acesso:");
                 const user = credenciais[p];
                 if(user) {
                     isLogged = true;
@@ -195,14 +198,16 @@
                     sessionStorage.setItem('weazel_user', user.nome);
                     sessionStorage.setItem('weazel_role', user.cargo);
                     document.getElementById('auth-btn').innerText = user.nome.toUpperCase();
+                    alert(`Logado como: ${user.nome} (${user.cargo})`);
                     showPage('editor');
                     db.ref('articles').once('value', s => renderFeed(s.val()));
                 } else {
-                    alert("Senha incorreta!");
+                    alert("Senha inválida!");
                 }
             }
         }
 
+        // NAVEGAÇÃO
         function showPage(p) {
             document.getElementById('pagina-home').classList.add('hidden');
             document.getElementById('pagina-noticia-aberta').classList.add('hidden');
@@ -223,6 +228,7 @@
             document.getElementById('form-'+t).classList.remove('hidden');
         }
 
+        // FEED DE NOTÍCIAS
         db.ref('articles').on('value', s => renderFeed(s.val()));
 
         function renderFeed(data) {
@@ -246,30 +252,7 @@
             });
         }
 
-        function prepararEdicaoMateria(id) {
-            db.ref('articles/'+id).once('value', s => {
-                const item = s.val();
-                document.getElementById('edit-id-article').value = id;
-                document.getElementById('title').value = item.title;
-                document.getElementById('category').value = item.category;
-                document.getElementById('content').value = item.content;
-                document.getElementById('img1').value = item.images ? item.images[0] : '';
-                document.getElementById('img2').value = item.images ? item.images[1] : '';
-                document.getElementById('img3').value = item.images ? item.images[2] : '';
-                document.getElementById('img4').value = item.images ? item.images[3] : '';
-                document.getElementById('btn-save-article').innerText = "Atualizar Matéria";
-                showPage('editor'); switchTab('noticia');
-            });
-        }
-
-        function filterNews(cat, btn) {
-            currentCategory = cat;
-            document.querySelectorAll('#filter-nav .nav-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            db.ref('articles').once('value', s => renderFeed(s.val()));
-            showPage('feed');
-        }
-
+        // ABRIR MATÉRIA
         function abrirMateria(id) {
             db.ref('articles/'+id).once('value', s => {
                 const item = s.val();
@@ -293,6 +276,27 @@
             });
         }
 
+        // FONT SIZE
+        function changeFontSize(v) {
+            fontSize += v;
+            if(fontSize < 0.8) fontSize = 0.8;
+            if(fontSize > 2.0) fontSize = 2.0;
+            const elementoTexto = document.getElementById('texto-materia-real');
+            if(elementoTexto) {
+                elementoTexto.style.fontSize = fontSize + 'rem';
+            }
+        }
+
+        // FILTRO
+        function filterNews(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('#filter-nav .nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            db.ref('articles').once('value', s => renderFeed(s.val()));
+            showPage('feed');
+        }
+
+        // CRUD MATÉRIAS
         document.getElementById('form-noticia').onsubmit = function(e) {
             e.preventDefault();
             const id = document.getElementById('edit-id-article').value;
@@ -311,6 +315,23 @@
             showPage('feed');
         };
 
+        function prepararEdicaoMateria(id) {
+            db.ref('articles/'+id).once('value', s => {
+                const item = s.val();
+                document.getElementById('edit-id-article').value = id;
+                document.getElementById('title').value = item.title;
+                document.getElementById('category').value = item.category;
+                document.getElementById('content').value = item.content;
+                document.getElementById('img1').value = item.images ? item.images[0] : '';
+                document.getElementById('img2').value = item.images ? item.images[1] : '';
+                document.getElementById('img3').value = item.images ? item.images[2] : '';
+                document.getElementById('img4').value = item.images ? item.images[3] : '';
+                document.getElementById('btn-save-article').innerText = "Atualizar Matéria";
+                showPage('editor'); switchTab('noticia');
+            });
+        }
+
+        // OUTROS FORMS
         document.getElementById('form-anuncio').onsubmit = function(e) {
             e.preventDefault();
             db.ref('ads').push({ brand: document.getElementById('ad-brand').value, img: document.getElementById('ad-img').value });
@@ -327,7 +348,24 @@
             this.reset(); alert("Procurado adicionado!");
         };
 
+        // SIDEBAR DATA
         db.ref('ads').on('value', s => {
             const cont = document.getElementById('ads-container'); cont.innerHTML = '';
             Object.keys(s.val() || {}).forEach(k => {
                 const a = s.val()[k];
+                cont.innerHTML += `<div style="margin-bottom:20px"><span class="ad-brand">${a.brand}</span><img src="${a.img}" class="anuncio-img">${(isLogged && userRole==='admin') ? `<button class="admin-btn-del" onclick="db.ref('ads/${k}').remove()">Remover</button>` : ''}</div>`;
+            });
+        });
+
+        db.ref('wanted').on('value', s => {
+            const cont = document.getElementById('wanted-container'); cont.innerHTML = '';
+            Object.keys(s.val() || {}).forEach(k => {
+                const w = s.val()[k];
+                cont.innerHTML += `<div class="procurado-item"><img src="${w.img}" class="procurado-img"><div><div style="font-family:'Oswald'; font-size:0.9rem">${w.name}</div><div style="color:red; font-size:0.7rem; font-weight:bold">${w.status}</div></div><div class="ficha-hover"><b style="color:red">CRIMES:</b> ${w.crime}<br><br><b style="color:gold">RECOMPENSA:</b> ${w.reward}</div>${(isLogged && userRole==='admin') ? `<button class="admin-btn-del" onclick="db.ref('wanted/${k}').remove()">X</button>` : ''}</div>`;
+            });
+        });
+
+        function voltarHome() { showPage('feed'); }
+    </script>
+</body>
+</html>
