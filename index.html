@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weazel FM, A rádio da cidade</title>
+    <title>Weazel FM - A rádio da cidade</title>
     <link rel="icon" type="image/png" href="ChatGPT Image 12 de mai. de 2026, 15_45_01.png">
     
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -20,36 +20,39 @@
         .login-btn { background: #2a2d37; color: #fff; border: 1px solid #444; padding: 6px 15px; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; font-weight: bold; }
         .login-btn:hover { background: var(--primary); border-color: var(--primary); }
 
+        .nav-container { max-width: 1200px; margin: 30px auto; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .nav-btn { background: var(--card-bg); border: 1px solid #333; color: #fff; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-family: 'Oswald'; text-transform: uppercase; transition: 0.2s; }
+        .nav-btn.active, .nav-btn:hover { background: var(--primary); border-color: var(--primary); }
+
         .main-layout { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 320px; gap: 30px; padding: 0 20px; }
+        
+        /* Feed */
+        .news-card { background: var(--card-bg); border-radius: 10px; border: 1px solid #2a2d37; margin-bottom: 30px; overflow: hidden; cursor: pointer; transition: 0.2s; padding: 25px; }
+        .news-card:hover { border-color: var(--primary); }
+        .badge { background: var(--primary); padding: 4px 12px; border-radius: 3px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; font-family: 'Oswald'; }
+        .news-title { font-family: 'Oswald'; font-size: 1.8rem; margin: 10px 0; color: #fff; line-height: 1.1; }
+        .news-summary { color: var(--text-gray); font-size: 0.95rem; line-height: 1.5; margin-bottom: 15px; }
+
+        /* Matéria Aberta */
+        .content-body { line-height: 1.8; font-size: 1.1rem; }
+        .inline-img { width: 100%; border-radius: 8px; border: 1px solid #333; margin: 20px 0; display: block; }
+
+        /* Sidebar Widgets */
         .sidebar-widget { background: var(--card-bg); border: 1px solid #2a2d37; border-radius: 8px; padding: 20px; margin-bottom: 30px; margin-top: 20px; }
         .widget-title { font-family: 'Oswald'; text-transform: uppercase; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px; font-size: 1.2rem; }
-        
         .ad-brand { font-family: 'Oswald'; font-size: 0.9rem; color: var(--primary); text-transform: uppercase; margin-bottom: 5px; display: block; letter-spacing: 1px; }
         .anuncio-img { width: 100%; border-radius: 4px; border: 1px solid #333; cursor: default; }
 
+        /* Procurados */
         .procurado-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #2a2d37; padding-bottom: 10px; position: relative; }
         .procurado-img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; background: #000; cursor: help; }
-        .ficha-hover { display: none; position: absolute; right: calc(100% + 20px); top: 0; background: #0a0a0c; border: 2px solid var(--primary); padding: 15px; width: 250px; z-index: 9999; border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.9); font-size: 0.8rem; pointer-events: none; }
+        .ficha-hover { display: none; position: absolute; right: calc(100% + 15px); top: 0; background: #0a0a0c; border: 2px solid var(--primary); padding: 15px; width: 220px; z-index: 9999; border-radius: 6px; box-shadow: 0 10px 25px #000; }
         .procurado-item:hover .ficha-hover { display: block; }
 
-        .nav-container { max-width: 1200px; margin: 30px auto; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        .nav-btn { background: var(--card-bg); border: 1px solid #333; color: #fff; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-family: 'Oswald'; text-transform: uppercase; }
-        .nav-btn.active { background: var(--primary); border-color: var(--primary); }
-        
-        .news-card { background: var(--card-bg); border-radius: 10px; border: 1px solid #2a2d37; margin-bottom: 30px; overflow: hidden; cursor: pointer; }
-        .badge { background: var(--primary); padding: 4px 12px; border-radius: 3px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; font-family: 'Oswald'; }
-        .news-title { font-family: 'Oswald'; font-size: 1.8rem; margin: 10px 0; color: #fff; line-height: 1.1; }
-        
-        .news-img-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
-        .news-img-item { width: 100%; border-radius: 6px; border: 1px solid #333; }
-
-        .editor-section { background: var(--card-bg); padding: 40px; border-radius: 12px; margin-top: 20px; }
-        .tab-btn { padding: 10px 20px; background: #111; color: #666; border: 1px solid #333; cursor: pointer; font-family: 'Oswald'; margin-right: 5px; }
-        .tab-btn.active { background: var(--primary); color: white; }
-
-        input, textarea, select { width: 100%; background: #0f1014; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 4px; margin-bottom: 12px; box-sizing: border-box; }
+        /* Painel Admin */
+        .editor-section { background: var(--card-bg); padding: 40px; border-radius: 12px; border: 1px solid #333; margin-top: 20px; }
+        input, textarea, select { width: 100%; background: #0f1014; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 4px; margin-bottom: 12px; box-sizing: border-box; font-family: 'Inter'; }
         .btn-publish { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; font-weight: 800; text-transform: uppercase; cursor: pointer; font-family: 'Oswald'; font-size: 1.1rem; }
-        
         .hidden { display: none !important; }
         .admin-btn-del { background: #600; color: white; border: none; padding: 4px 8px; font-size: 0.65rem; cursor: pointer; border-radius: 3px; margin-top: 5px; font-family: 'Oswald'; }
     </style>
@@ -67,18 +70,20 @@
         </div>
     </div>
 
-    <nav class="nav-container">
+    <nav class="nav-container" id="filter-nav">
         <button class="nav-btn active" onclick="filterNews('all', this)">📌 Início</button>
         <button class="nav-btn" onclick="filterNews('Plantão Policial', this)">🚔 Policial</button>
         <button class="nav-btn" onclick="filterNews('Esportes', this)">🏀 Esportes</button>
         <button class="nav-btn" onclick="filterNews('Cotidiano', this)">🌆 Cotidiano</button>
+        <button class="nav-btn" onclick="filterNews('Opinião', this)">✍️ Opinião</button>
     </nav>
 
     <div class="main-layout">
         <main>
             <div id="pagina-home"><div id="feed-page"></div></div>
+            
             <div id="pagina-noticia-aberta" class="hidden">
-                <div style="margin-bottom: 20px;">
+                <div style="margin-bottom: 20px; display: flex; gap: 10px;">
                     <button class="nav-btn" onclick="voltarHome()" style="background:var(--primary)">VOLTAR</button>
                     <button class="nav-btn" onclick="changeFontSize(0.1)">A+</button>
                     <button class="nav-btn" onclick="changeFontSize(-0.1)">A-</button>
@@ -87,25 +92,46 @@
             </div>
 
             <div id="editor-page" class="editor-section hidden">
-                <div style="margin-bottom:20px">
-                    <button class="tab-btn active" onclick="switchTab('noticia')">Matéria</button>
-                    <button class="tab-btn" onclick="switchTab('anuncio')">Anúncio</button>
-                    <button class="tab-btn" onclick="switchTab('procurado')">Procurado</button>
+                <div style="margin-bottom:20px; display: flex; gap: 10px;">
+                    <button class="nav-btn active" id="tab-noticia" onclick="switchTab('noticia')">Matéria</button>
+                    <button class="nav-btn" id="tab-anuncio" onclick="switchTab('anuncio')">Anúncio</button>
+                    <button class="nav-btn" id="tab-procurado" onclick="switchTab('procurado')">Procurado</button>
                 </div>
+                
                 <form id="form-noticia">
-                    <input type="text" id="title" placeholder="Título" required>
-                    <select id="category"><option value="Plantão Policial">Plantão Policial</option><option value="Esportes">Esportes</option></select>
-                    <textarea id="content" rows="8" placeholder="Texto da matéria" required></textarea>
-                    <input type="url" id="img1" placeholder="URL Imagem 1"><input type="url" id="img2" placeholder="URL Imagem 2">
-                    <input type="url" id="img3" placeholder="URL Imagem 3"><input type="url" id="img4" placeholder="URL Imagem 4">
-                    <button type="submit" class="btn-publish">Publicar</button>
+                    <input type="text" id="title" placeholder="Título da Matéria" required>
+                    <select id="category">
+                        <option value="Plantão Policial">Plantão Policial</option>
+                        <option value="Esportes">Esportes</option>
+                        <option value="Cotidiano">Cotidiano</option>
+                        <option value="Opinião">Opinião</option>
+                    </select>
+                    <textarea id="content" rows="12" placeholder="Escreva aqui. Use [IMG1], [IMG2] etc para posicionar as imagens no meio do texto." required></textarea>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="url" id="img1" placeholder="URL Imagem 1">
+                        <input type="url" id="img2" placeholder="URL Imagem 2">
+                        <input type="url" id="img3" placeholder="URL Imagem 3">
+                        <input type="url" id="img4" placeholder="URL Imagem 4">
+                    </div>
+                    <button type="submit" class="btn-publish">Publicar Matéria</button>
                 </form>
+
                 <form id="form-anuncio" class="hidden">
-                    <input type="text" id="ad-brand" placeholder="Nome da Empresa (Ex: Pops Diner)" required>
+                    <input type="text" id="ad-brand" placeholder="Empresa Patrocinadora" required>
                     <input type="url" id="ad-img" placeholder="URL do Banner" required>
                     <button type="submit" class="btn-publish">Salvar Anúncio</button>
                 </form>
-                <button onclick="voltarHome()" style="margin-top:10px; width:100%; padding:10px; background:#333; color:#fff; border:none; cursor:pointer">Sair do Painel</button>
+
+                <form id="form-procurado" class="hidden">
+                    <input type="text" id="w-name" placeholder="Nome do Melianete" required>
+                    <input type="text" id="w-status" placeholder="Status (ex: PROCURADO)">
+                    <input type="url" id="w-img" placeholder="URL da Foto">
+                    <input type="text" id="w-crime" placeholder="Crimes Cometidos">
+                    <input type="text" id="w-reward" placeholder="Recompensa">
+                    <button type="submit" class="btn-publish">Salvar na Lista</button>
+                </form>
+                
+                <button onclick="voltarHome()" style="margin-top:15px; width:100%; padding:10px; background:#333; color:#fff; border:none; cursor:pointer; font-family:'Oswald'">Sair do Painel</button>
             </div>
         </main>
 
@@ -127,7 +153,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        let isLogged = false, loggedUser = sessionStorage.getItem('weazel_user') || "", fontSize = 1.1;
+        let isLogged = false, loggedUser = sessionStorage.getItem('weazel_user') || "", fontSize = 1.1, currentCategory = 'all';
 
         function updateTime() {
             const now = new Date();
@@ -140,7 +166,7 @@
             if(isLogged) showPage('editor');
             else {
                 const p = prompt("Senha:"); if(p === "andrewgallowaywfm") {
-                    const n = prompt("Nome:"); if(n) { isLogged = true; loggedUser = n; sessionStorage.setItem('weazel_user', n); showPage('editor'); }
+                    const n = prompt("Seu Nome:"); if(n) { isLogged = true; loggedUser = n; sessionStorage.setItem('weazel_user', n); showPage('editor'); }
                 }
             }
         }
@@ -159,41 +185,72 @@
         function switchTab(t) {
             document.getElementById('form-noticia').classList.add('hidden');
             document.getElementById('form-anuncio').classList.add('hidden');
-            if(t === 'noticia') document.getElementById('form-noticia').classList.remove('hidden');
-            if(t === 'anuncio') document.getElementById('form-anuncio').classList.remove('hidden');
+            document.getElementById('form-procurado').classList.add('hidden');
+            document.querySelectorAll('.editor-section .nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-'+t).classList.add('active');
+            document.getElementById('form-'+t).classList.remove('hidden');
         }
 
-        // CARREGAR NOTICIAS
-        db.ref('articles').on('value', s => {
+        // CARREGAR FEED COM RESUMO
+        db.ref('articles').on('value', s => renderFeed(s.val()));
+
+        function renderFeed(data) {
             const feed = document.getElementById('feed-page'); feed.innerHTML = '';
-            const items = Object.keys(s.val() || {}).map(k => ({id:k, ...s.val()[k]})).sort((a,b)=>b.timestamp-a.timestamp);
-            items.forEach(item => {
-                feed.innerHTML += `<div class="news-card" onclick="abrirMateria('${item.id}')" style="padding:25px">
+            if(!data) return;
+            const items = Object.keys(data).map(k => ({id:k, ...data[k]})).sort((a,b)=>b.timestamp-a.timestamp);
+            const filtered = currentCategory === 'all' ? items : items.filter(i => i.category === currentCategory);
+            
+            filtered.forEach(item => {
+                feed.innerHTML += `
+                <div class="news-card" onclick="abrirMateria('${item.id}')">
                     <span class="badge">${item.category}</span>
                     <h2 class="news-title">${item.title}</h2>
+                    <div class="news-summary">${item.content.substring(0, 180)}...</div>
+                    <div style="font-size:0.75rem; color:#666">Publicado em ${item.date} por ${item.author}</div>
                     ${isLogged ? `<button class="admin-btn-del" onclick="event.stopPropagation(); db.ref('articles/${item.id}').remove()">Apagar</button>` : ''}
                 </div>`;
             });
-        });
+        }
+
+        function filterNews(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('#filter-nav .nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            db.ref('articles').once('value', s => renderFeed(s.val()));
+            showPage('feed');
+        }
 
         function abrirMateria(id) {
             db.ref('articles/'+id).once('value', s => {
                 const item = s.val();
-                let imgHtml = '<div class="news-img-grid">';
-                if(item.images) item.images.forEach(img => { if(img) imgHtml += `<img src="${img}" class="news-img-item">`; });
-                imgHtml += '</div>';
+                let texto = item.content.replace(/\n/g, '<br>');
+                
+                // Processa imagens no meio do texto
+                if(item.images) {
+                    item.images.forEach((url, i) => {
+                        if(url) {
+                            const tag = `[IMG${i+1}]`;
+                            const imgHtml = `<img src="${url}" class="inline-img">`;
+                            if(texto.includes(tag)) {
+                                texto = texto.replace(tag, imgHtml);
+                            } else {
+                                texto += imgHtml; // Se não colocou a tag, joga pro final
+                            }
+                        }
+                    });
+                }
 
                 document.getElementById('conteudo-aberto').innerHTML = `
                     <span class="badge">${item.category}</span>
                     <h1 class="news-title" style="font-size:3rem">${item.title}</h1>
-                    <p style="color:#666">Por ${item.author} em ${item.date}</p>
-                    ${imgHtml}
-                    <div style="line-height:1.6; font-size:${fontSize}rem">${item.content.replace(/\n/g, '<br>')}</div>`;
+                    <p style="color:#666">Por ${item.author} | ${item.date}</p>
+                    <hr style="border:0; border-top:1px solid #333; margin:20px 0">
+                    <div class="content-body" style="font-size:${fontSize}rem">${texto}</div>`;
                 showPage('aberta');
             });
         }
 
-        // FORMULARIOS
+        // SALVAR DADOS
         document.getElementById('form-noticia').onsubmit = function(e) {
             e.preventDefault();
             db.ref('articles').push({
@@ -201,32 +258,56 @@
                 content: document.getElementById('content').value, author: loggedUser, timestamp: Date.now(), date: new Date().toLocaleDateString(),
                 images: [document.getElementById('img1').value, document.getElementById('img2').value, document.getElementById('img3').value, document.getElementById('img4').value]
             });
-            this.reset(); alert("Postado!");
+            this.reset(); alert("Matéria publicada!");
         };
 
         document.getElementById('form-anuncio').onsubmit = function(e) {
             e.preventDefault();
             db.ref('ads').push({ brand: document.getElementById('ad-brand').value, img: document.getElementById('ad-img').value });
-            this.reset(); alert("Anúncio Salvo!");
+            this.reset(); alert("Anúncio salvo!");
         };
 
+        document.getElementById('form-procurado').onsubmit = function(e) {
+            e.preventDefault();
+            db.ref('wanted').push({
+                name: document.getElementById('w-name').value, status: document.getElementById('w-status').value,
+                img: document.getElementById('w-img').value, crime: document.getElementById('w-crime').value,
+                reward: document.getElementById('w-reward').value
+            });
+            this.reset(); alert("Procurado adicionado!");
+        };
+
+        // RENDER SIDEBAR
         db.ref('ads').on('value', s => {
             const cont = document.getElementById('ads-container'); cont.innerHTML = '';
             Object.keys(s.val() || {}).forEach(k => {
                 const a = s.val()[k];
-                cont.innerHTML += `<div style="margin-bottom:20px;">
-                    <span class="ad-brand">${a.brand || 'ANÚNCIO'}</span>
+                cont.innerHTML += `<div style="margin-bottom:20px">
+                    <span class="ad-brand">${a.brand}</span>
                     <img src="${a.img}" class="anuncio-img">
                     ${isLogged ? `<button class="admin-btn-del" onclick="db.ref('ads/${k}').remove()">Remover</button>` : ''}
                 </div>`;
             });
         });
 
-        function filterNews(c, b) {
-            document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active')); b.classList.add('active');
-            // Lógica de filtro aqui (mesma do feed)...
-            showPage('feed');
-        }
+        db.ref('wanted').on('value', s => {
+            const cont = document.getElementById('wanted-container'); cont.innerHTML = '';
+            Object.keys(s.val() || {}).forEach(k => {
+                const w = s.val()[k];
+                cont.innerHTML += `
+                <div class="procurado-item">
+                    <img src="${w.img}" class="procurado-img">
+                    <div>
+                        <div style="font-family:'Oswald'; font-size:0.9rem">${w.name}</div>
+                        <div style="color:red; font-size:0.7rem; font-weight:bold">${w.status}</div>
+                    </div>
+                    <div class="ficha-hover">
+                        <b style="color:red">CRIMES:</b> ${w.crime}<br><br>
+                        <b style="color:gold">RECOMPENSA:</b> ${w.reward}
+                    </div>
+                </div>`;
+            });
+        });
 
         function voltarHome() { showPage('feed'); }
         function changeFontSize(v) { fontSize += v; document.getElementById('conteudo-aberto').style.fontSize = fontSize + 'rem'; }
