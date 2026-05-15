@@ -12,7 +12,7 @@
     
     <style>
         :root { --primary: #cc0000; --bg-dark: #0f1014; --card-bg: #1c1e26; --text-gray: #a0a0a0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: #e0e0e0; margin: 0; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: #e0e0e0; margin: 0; overflow-x: hidden; user-select: none; }
         
         .top-bar { background: rgba(0,0,0,0.9); padding: 10px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2d37; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
         .logo-main img { height: 55px; cursor: pointer; }
@@ -26,38 +26,34 @@
 
         .main-layout { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 320px; gap: 30px; padding: 0 20px; }
         
-        /* Feed */
         .news-card { background: var(--card-bg); border-radius: 10px; border: 1px solid #2a2d37; margin-bottom: 30px; overflow: hidden; cursor: pointer; transition: 0.2s; padding: 25px; }
         .news-card:hover { border-color: var(--primary); }
         .badge { background: var(--primary); padding: 4px 12px; border-radius: 3px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; font-family: 'Oswald'; }
         .news-title { font-family: 'Oswald'; font-size: 1.8rem; margin: 10px 0; color: #fff; line-height: 1.1; }
         .news-summary { color: var(--text-gray); font-size: 0.95rem; line-height: 1.5; margin-bottom: 15px; }
 
-        /* Matéria Aberta */
         .content-body { line-height: 1.8; font-size: 1.1rem; }
         .inline-img { width: 100%; border-radius: 8px; border: 1px solid #333; margin: 20px 0; display: block; }
 
-        /* Sidebar Widgets */
         .sidebar-widget { background: var(--card-bg); border: 1px solid #2a2d37; border-radius: 8px; padding: 20px; margin-bottom: 30px; margin-top: 20px; }
         .widget-title { font-family: 'Oswald'; text-transform: uppercase; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px; font-size: 1.2rem; }
         .ad-brand { font-family: 'Oswald'; font-size: 0.9rem; color: var(--primary); text-transform: uppercase; margin-bottom: 5px; display: block; letter-spacing: 1px; }
         .anuncio-img { width: 100%; border-radius: 4px; border: 1px solid #333; cursor: default; }
 
-        /* Procurados */
         .procurado-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #2a2d37; padding-bottom: 10px; position: relative; }
         .procurado-img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; background: #000; cursor: help; }
-        .ficha-hover { display: none; position: absolute; right: calc(100% + 15px); top: 0; background: #0a0a0c; border: 2px solid var(--primary); padding: 15px; width: 220px; z-index: 9999; border-radius: 6px; box-shadow: 0 10px 25px #000; }
+        .ficha-hover { display: none; position: absolute; right: calc(100% + 15px); top: 0; background: #0a0a0c; border: 2px solid var(--primary); padding: 15px; width: 220px; z-index: 9999; border-radius: 6px; box-shadow: 0 10px 25px #000; pointer-events: none; }
         .procurado-item:hover .ficha-hover { display: block; }
 
-        /* Painel Admin */
         .editor-section { background: var(--card-bg); padding: 40px; border-radius: 12px; border: 1px solid #333; margin-top: 20px; }
         input, textarea, select { width: 100%; background: #0f1014; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 4px; margin-bottom: 12px; box-sizing: border-box; font-family: 'Inter'; }
         .btn-publish { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; font-weight: 800; text-transform: uppercase; cursor: pointer; font-family: 'Oswald'; font-size: 1.1rem; }
         .hidden { display: none !important; }
-        .admin-btn-del { background: #600; color: white; border: none; padding: 4px 8px; font-size: 0.65rem; cursor: pointer; border-radius: 3px; margin-top: 5px; font-family: 'Oswald'; }
+        .admin-btn-del { background: #600; color: white; border: none; padding: 4px 8px; font-size: 0.65rem; cursor: pointer; border-radius: 3px; margin-top: 5px; font-family: 'Oswald'; margin-right: 5px; }
+        .admin-btn-edit { background: #0044cc; color: white; border: none; padding: 4px 8px; font-size: 0.65rem; cursor: pointer; border-radius: 3px; margin-top: 5px; font-family: 'Oswald'; }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
     <div class="top-bar">
         <div class="logo-main" onclick="window.location.reload()"><img src="ChatGPT Image 12 de mai. de 2026, 15_45_01.png"></div>
@@ -99,6 +95,7 @@
                 </div>
                 
                 <form id="form-noticia">
+                    <input type="hidden" id="edit-id-article">
                     <input type="text" id="title" placeholder="Título da Matéria" required>
                     <select id="category">
                         <option value="Plantão Policial">Plantão Policial</option>
@@ -113,7 +110,7 @@
                         <input type="url" id="img3" placeholder="URL Imagem 3">
                         <input type="url" id="img4" placeholder="URL Imagem 4">
                     </div>
-                    <button type="submit" class="btn-publish">Publicar Matéria</button>
+                    <button type="submit" id="btn-save-article" class="btn-publish">Publicar Matéria</button>
                 </form>
 
                 <form id="form-anuncio" class="hidden">
@@ -153,7 +150,17 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        
         let isLogged = false, loggedUser = sessionStorage.getItem('weazel_user') || "", fontSize = 1.1, currentCategory = 'all';
+
+        // TRAVA F12, CONTROL U, CONTROL SHIFT I
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123) return false;
+            if(e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+        };
+
+        if(loggedUser) { isLogged = true; document.getElementById('auth-btn').innerText = loggedUser.toUpperCase(); }
 
         function updateTime() {
             const now = new Date();
@@ -166,7 +173,7 @@
             if(isLogged) showPage('editor');
             else {
                 const p = prompt("Senha:"); if(p === "andrewgallowaywfm") {
-                    const n = prompt("Seu Nome:"); if(n) { isLogged = true; loggedUser = n; sessionStorage.setItem('weazel_user', n); showPage('editor'); }
+                    const n = prompt("Seu Nome:"); if(n) { isLogged = true; loggedUser = n; sessionStorage.setItem('weazel_user', n); document.getElementById('auth-btn').innerText = n.toUpperCase(); showPage('editor'); }
                 }
             }
         }
@@ -191,7 +198,6 @@
             document.getElementById('form-'+t).classList.remove('hidden');
         }
 
-        // CARREGAR FEED COM RESUMO
         db.ref('articles').on('value', s => renderFeed(s.val()));
 
         function renderFeed(data) {
@@ -207,8 +213,27 @@
                     <h2 class="news-title">${item.title}</h2>
                     <div class="news-summary">${item.content.substring(0, 180)}...</div>
                     <div style="font-size:0.75rem; color:#666">Publicado em ${item.date} por ${item.author}</div>
-                    ${isLogged ? `<button class="admin-btn-del" onclick="event.stopPropagation(); db.ref('articles/${item.id}').remove()">Apagar</button>` : ''}
+                    ${isLogged ? `
+                        <button class="admin-btn-del" onclick="event.stopPropagation(); db.ref('articles/${item.id}').remove()">Apagar</button>
+                        <button class="admin-btn-edit" onclick="event.stopPropagation(); prepararEdicaoMateria('${item.id}')">Editar</button>
+                    ` : ''}
                 </div>`;
+            });
+        }
+
+        function prepararEdicaoMateria(id) {
+            db.ref('articles/'+id).once('value', s => {
+                const item = s.val();
+                document.getElementById('edit-id-article').value = id;
+                document.getElementById('title').value = item.title;
+                document.getElementById('category').value = item.category;
+                document.getElementById('content').value = item.content;
+                document.getElementById('img1').value = item.images[0] || '';
+                document.getElementById('img2').value = item.images[1] || '';
+                document.getElementById('img3').value = item.images[2] || '';
+                document.getElementById('img4').value = item.images[3] || '';
+                document.getElementById('btn-save-article').innerText = "Atualizar Matéria";
+                showPage('editor'); switchTab('noticia');
             });
         }
 
@@ -224,22 +249,15 @@
             db.ref('articles/'+id).once('value', s => {
                 const item = s.val();
                 let texto = item.content.replace(/\n/g, '<br>');
-                
-                // Processa imagens no meio do texto
                 if(item.images) {
                     item.images.forEach((url, i) => {
                         if(url) {
                             const tag = `[IMG${i+1}]`;
                             const imgHtml = `<img src="${url}" class="inline-img">`;
-                            if(texto.includes(tag)) {
-                                texto = texto.replace(tag, imgHtml);
-                            } else {
-                                texto += imgHtml; // Se não colocou a tag, joga pro final
-                            }
+                            texto = texto.includes(tag) ? texto.replace(tag, imgHtml) : texto + imgHtml;
                         }
                     });
                 }
-
                 document.getElementById('conteudo-aberto').innerHTML = `
                     <span class="badge">${item.category}</span>
                     <h1 class="news-title" style="font-size:3rem">${item.title}</h1>
@@ -250,15 +268,17 @@
             });
         }
 
-        // SALVAR DADOS
         document.getElementById('form-noticia').onsubmit = function(e) {
             e.preventDefault();
-            db.ref('articles').push({
+            const id = document.getElementById('edit-id-article').value;
+            const data = {
                 title: document.getElementById('title').value, category: document.getElementById('category').value,
                 content: document.getElementById('content').value, author: loggedUser, timestamp: Date.now(), date: new Date().toLocaleDateString(),
                 images: [document.getElementById('img1').value, document.getElementById('img2').value, document.getElementById('img3').value, document.getElementById('img4').value]
-            });
-            this.reset(); alert("Matéria publicada!");
+            };
+            if(id) db.ref('articles/'+id).update(data); else db.ref('articles').push(data);
+            this.reset(); document.getElementById('edit-id-article').value = ""; document.getElementById('btn-save-article').innerText = "Publicar Matéria";
+            alert("Sucesso!");
         };
 
         document.getElementById('form-anuncio').onsubmit = function(e) {
@@ -277,16 +297,11 @@
             this.reset(); alert("Procurado adicionado!");
         };
 
-        // RENDER SIDEBAR
         db.ref('ads').on('value', s => {
             const cont = document.getElementById('ads-container'); cont.innerHTML = '';
             Object.keys(s.val() || {}).forEach(k => {
                 const a = s.val()[k];
-                cont.innerHTML += `<div style="margin-bottom:20px">
-                    <span class="ad-brand">${a.brand}</span>
-                    <img src="${a.img}" class="anuncio-img">
-                    ${isLogged ? `<button class="admin-btn-del" onclick="db.ref('ads/${k}').remove()">Remover</button>` : ''}
-                </div>`;
+                cont.innerHTML += `<div style="margin-bottom:20px"><span class="ad-brand">${a.brand}</span><img src="${a.img}" class="anuncio-img">${isLogged ? `<button class="admin-btn-del" onclick="db.ref('ads/${k}').remove()">Remover</button>` : ''}</div>`;
             });
         });
 
@@ -294,18 +309,7 @@
             const cont = document.getElementById('wanted-container'); cont.innerHTML = '';
             Object.keys(s.val() || {}).forEach(k => {
                 const w = s.val()[k];
-                cont.innerHTML += `
-                <div class="procurado-item">
-                    <img src="${w.img}" class="procurado-img">
-                    <div>
-                        <div style="font-family:'Oswald'; font-size:0.9rem">${w.name}</div>
-                        <div style="color:red; font-size:0.7rem; font-weight:bold">${w.status}</div>
-                    </div>
-                    <div class="ficha-hover">
-                        <b style="color:red">CRIMES:</b> ${w.crime}<br><br>
-                        <b style="color:gold">RECOMPENSA:</b> ${w.reward}
-                    </div>
-                </div>`;
+                cont.innerHTML += `<div class="procurado-item"><img src="${w.img}" class="procurado-img"><div><div style="font-family:'Oswald'; font-size:0.9rem">${w.name}</div><div style="color:red; font-size:0.7rem; font-weight:bold">${w.status}</div></div><div class="ficha-hover"><b style="color:red">CRIMES:</b> ${w.crime}<br><br><b style="color:gold">RECOMPENSA:</b> ${w.reward}</div>${isLogged ? `<button class="admin-btn-del" onclick="db.ref('wanted/${k}').remove()">X</button>` : ''}</div>`;
             });
         });
 
