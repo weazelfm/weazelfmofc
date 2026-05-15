@@ -53,7 +53,6 @@
         .admin-btn-edit { background: #0044cc; color: white; border: none; padding: 4px 8px; font-size: 0.65rem; cursor: pointer; border-radius: 3px; margin-top: 5px; font-family: 'Oswald'; }
     </style>
 </head>
-<body oncontextmenu="return false;">
 <body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
 
     <div class="top-bar">
@@ -152,41 +151,30 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let isLogged = false, loggedUser = sessionStorage.getItem('weazel_user') || "", fontSize = 1.1, currentCategory = 'all';
-        
-      // BLOQUEIO TOTAL: F12, CTRL+U, INSPEÇÃO E BOTÃO DIREITO
-window.addEventListener('contextmenu', e => e.preventDefault());
-
-        // TRAVA F12, CONTROL U, CONTROL SHIFT I
-        document.onkeydown = function(e) {
-            if(e.keyCode == 123) return false;
-            if(e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
-            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+        // CONFIGURAÇÕES DE ACESSO
+        const credenciais = {
+            "andrewgallowaywfm": { nome: "Bruno Barbosa", cargo: "admin" },
+            "editor123": { nome: "Redator", cargo: "editor" }
         };
-window.addEventListener('keydown', e => {
-    // Bloqueia F12
-    if (e.key === "F12" || e.keyCode === 123) {
-        e.preventDefault();
-        return false;
-    }
 
-    // Bloqueia Ctrl+U (Source) e Ctrl+S (Salvar)
-    if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 's' || e.keyCode === 85 || e.keyCode === 83)) {
-        e.preventDefault();
-        return false;
-    }
+        let isLogged = false;
+        let loggedUser = sessionStorage.getItem('weazel_user') || "";
+        let userRole = sessionStorage.getItem('weazel_role') || "";
+        let fontSize = 1.1;
+        let currentCategory = 'all';
 
-    // Bloqueia Ctrl+Shift+I, J, C (Inspeção)
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) {
-        e.preventDefault();
-        return false;
-    }
-}, { capture: true });
+        // BLOQUEIO TOTAL
+        window.addEventListener('contextmenu', e => e.preventDefault());
+        window.addEventListener('keydown', e => {
+            if (e.key === "F12" || e.keyCode === 123) e.preventDefault();
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 's')) e.preventDefault();
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) e.preventDefault();
+        }, { capture: true });
 
-// Bloqueia seleção de texto para dificultar cópia
-document.onselectstart = () => false;
-
-        if(loggedUser) { isLogged = true; document.getElementById('auth-btn').innerText = loggedUser.toUpperCase(); }
+        if(loggedUser) { 
+            isLogged = true; 
+            document.getElementById('auth-btn').innerText = loggedUser.toUpperCase(); 
+        }
 
         function updateTime() {
             const now = new Date();
@@ -198,8 +186,19 @@ document.onselectstart = () => false;
         function handleAuth() {
             if(isLogged) showPage('editor');
             else {
-                const p = prompt("Senha:"); if(p === "andrewgallowaywfm") {
-                    const n = prompt("Seu Nome:"); if(n) { isLogged = true; loggedUser = n; sessionStorage.setItem('weazel_user', n); document.getElementById('auth-btn').innerText = n.toUpperCase(); showPage('editor'); }
+                const p = prompt("Senha:");
+                const user = credenciais[p];
+                if(user) {
+                    isLogged = true;
+                    loggedUser = user.nome;
+                    userRole = user.cargo;
+                    sessionStorage.setItem('weazel_user', user.nome);
+                    sessionStorage.setItem('weazel_role', user.cargo);
+                    document.getElementById('auth-btn').innerText = user.nome.toUpperCase();
+                    showPage('editor');
+                    db.ref('articles').once('value', s => renderFeed(s.val()));
+                } else {
+                    alert("Senha incorreta!");
                 }
             }
         }
@@ -234,20 +233,14 @@ document.onselectstart = () => false;
 
             filtered.forEach(item => {
                 feed.innerHTML += `
-                <div class="news-card" onclick="abrirMateria('${item.id}')">            
-document.getElementById('conteudo-aberto').innerHTML = `
-    <span class="badge">${item.category}</span>
-    <h1 class="news-title" style="font-size:3rem">${item.title}</h1>
-    <p style="color:#666">Por ${item.author} | ${item.date}</p>
-    <hr style="border:0; border-top:1px solid #333; margin:20px 0">
-    <div id="texto-materia-real" class="content-body" style="font-size:${fontSize}rem">${texto}</div>`;
+                <div class="news-card" onclick="abrirMateria('${item.id}')">
                     <span class="badge">${item.category}</span>
                     <h2 class="news-title">${item.title}</h2>
                     <div class="news-summary">${item.content.substring(0, 180)}...</div>
                     <div style="font-size:0.75rem; color:#666">Publicado em ${item.date} por ${item.author}</div>
                     ${isLogged ? `
-                        <button class="admin-btn-del" onclick="event.stopPropagation(); db.ref('articles/${item.id}').remove()">Apagar</button>
                         <button class="admin-btn-edit" onclick="event.stopPropagation(); prepararEdicaoMateria('${item.id}')">Editar</button>
+                        ${userRole === 'admin' ? `<button class="admin-btn-del" onclick="event.stopPropagation(); db.ref('articles/${item.id}').remove()">Apagar</button>` : ''}
                     ` : ''}
                 </div>`;
             });
@@ -260,10 +253,10 @@ document.getElementById('conteudo-aberto').innerHTML = `
                 document.getElementById('title').value = item.title;
                 document.getElementById('category').value = item.category;
                 document.getElementById('content').value = item.content;
-                document.getElementById('img1').value = item.images[0] || '';
-                document.getElementById('img2').value = item.images[1] || '';
-                document.getElementById('img3').value = item.images[2] || '';
-                document.getElementById('img4').value = item.images[3] || '';
+                document.getElementById('img1').value = item.images ? item.images[0] : '';
+                document.getElementById('img2').value = item.images ? item.images[1] : '';
+                document.getElementById('img3').value = item.images ? item.images[2] : '';
+                document.getElementById('img4').value = item.images ? item.images[3] : '';
                 document.getElementById('btn-save-article').innerText = "Atualizar Matéria";
                 showPage('editor'); switchTab('noticia');
             });
@@ -295,7 +288,7 @@ document.getElementById('conteudo-aberto').innerHTML = `
                     <h1 class="news-title" style="font-size:3rem">${item.title}</h1>
                     <p style="color:#666">Por ${item.author} | ${item.date}</p>
                     <hr style="border:0; border-top:1px solid #333; margin:20px 0">
-                    <div class="content-body" style="font-size:${fontSize}rem">${texto}</div>`;
+                    <div id="texto-materia-real" class="content-body" style="font-size:${fontSize}rem">${texto}</div>`;
                 showPage('aberta');
             });
         }
@@ -304,13 +297,18 @@ document.getElementById('conteudo-aberto').innerHTML = `
             e.preventDefault();
             const id = document.getElementById('edit-id-article').value;
             const data = {
-                title: document.getElementById('title').value, category: document.getElementById('category').value,
-                content: document.getElementById('content').value, author: loggedUser, timestamp: Date.now(), date: new Date().toLocaleDateString(),
+                title: document.getElementById('title').value, 
+                category: document.getElementById('category').value,
+                content: document.getElementById('content').value, 
+                author: loggedUser, 
+                timestamp: Date.now(), 
+                date: new Date().toLocaleDateString(),
                 images: [document.getElementById('img1').value, document.getElementById('img2').value, document.getElementById('img3').value, document.getElementById('img4').value]
             };
             if(id) db.ref('articles/'+id).update(data); else db.ref('articles').push(data);
             this.reset(); document.getElementById('edit-id-article').value = ""; document.getElementById('btn-save-article').innerText = "Publicar Matéria";
             alert("Sucesso!");
+            showPage('feed');
         };
 
         document.getElementById('form-anuncio').onsubmit = function(e) {
@@ -333,30 +331,3 @@ document.getElementById('conteudo-aberto').innerHTML = `
             const cont = document.getElementById('ads-container'); cont.innerHTML = '';
             Object.keys(s.val() || {}).forEach(k => {
                 const a = s.val()[k];
-                cont.innerHTML += `<div style="margin-bottom:20px"><span class="ad-brand">${a.brand}</span><img src="${a.img}" class="anuncio-img">${isLogged ? `<button class="admin-btn-del" onclick="db.ref('ads/${k}').remove()">Remover</button>` : ''}</div>`;
-            });
-        });
-
-        db.ref('wanted').on('value', s => {
-            const cont = document.getElementById('wanted-container'); cont.innerHTML = '';
-            Object.keys(s.val() || {}).forEach(k => {
-                const w = s.val()[k];
-                cont.innerHTML += `<div class="procurado-item"><img src="${w.img}" class="procurado-img"><div><div style="font-family:'Oswald'; font-size:0.9rem">${w.name}</div><div style="color:red; font-size:0.7rem; font-weight:bold">${w.status}</div></div><div class="ficha-hover"><b style="color:red">CRIMES:</b> ${w.crime}<br><br><b style="color:gold">RECOMPENSA:</b> ${w.reward}</div>${isLogged ? `<button class="admin-btn-del" onclick="db.ref('wanted/${k}').remove()">X</button>` : ''}</div>`;
-            });
-        });
-
-        function voltarHome() { showPage('feed'); }
-function changeFontSize(v) {
-    fontSize += v;
-    // Garante que não fique pequeno demais nem gigante
-    if(fontSize < 0.8) fontSize = 0.8;
-    if(fontSize > 2.0) fontSize = 2.0;
-
-    const elementoTexto = document.getElementById('texto-materia-real');
-    if(elementoTexto) {
-        elementoTexto.style.fontSize = fontSize + 'rem';
-    }
-}
-    </script>
-</body>
-</html>
