@@ -139,6 +139,10 @@
     </div>
 
     <script>
+            "andrewgallowaywfm": { nome: "Andrew Galloway", cargo: "admin" }, // Esse é você, apaga tudo
+    "senhaeditor1": { nome: "Joao", cargo: "editor" },     // Esse só posta/edita
+    "senhaeditor2": { nome: "Maria", cargo: "editor" }     // Esse só posta/edita
+        
         const firebaseConfig = {
             apiKey: "AIzaSyBTYu6dC3Iyz-qtjHKvLaq-B_4qXMb1C4w",
             authDomain: "weazelfm-dfb2e.firebaseapp.com",
@@ -188,11 +192,35 @@ document.onselectstart = () => false;
         }
         setInterval(updateTime, 1000); updateTime();
 
-        function handleAuth() {
-            if(isLogged) showPage('editor');
-            else {
-                const p = prompt("Senha:"); if(p === "andrewgallowaywfm") {
-                    const n = prompt("Seu Nome:"); if(n) { isLogged = true; loggedUser = n; sessionStorage.setItem('weazel_user', n); document.getElementById('auth-btn').innerText = n.toUpperCase(); showPage('editor'); }
+function handleAuth() {
+    if (isLogged) {
+        showPage('editor');
+    } else {
+        const p = prompt("Senha de Acesso:");
+        const user = credenciais[p];
+
+        if (user) {
+            isLogged = true;
+            loggedUser = user.nome;
+            userRole = user.cargo;
+            
+            sessionStorage.setItem('weazel_user', user.nome);
+            sessionStorage.setItem('weazel_role', user.cargo);
+            
+            document.getElementById('auth-btn').innerText = user.nome.toUpperCase();
+            alert(`Bem-vindo, ${user.nome}! Nível: ${user.cargo}`);
+            showPage('editor');
+            
+            // Recarrega o feed pra mostrar os botões certos de acordo com o cargo
+            db.ref('articles').once('value', s => renderFeed(s.val()));
+        } else {
+            alert("Senha inválida, ladrão!");
+        }
+    }
+}
+};
+
+let userRole = sessionStorage.getItem('weazel_role') || ""; // Pra saber se é admin ou editor
                 }
             }
         }
