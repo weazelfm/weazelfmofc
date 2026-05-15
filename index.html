@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weazel FM - A rádio da cidade</title>
     <link rel="icon" type="image/png" href="ChatGPT Image 12 de mai. de 2026, 15_45_01.png">
-    
+
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    
+
     <style>
         :root { --primary: #cc0000; --bg-dark: #0f1014; --card-bg: #1c1e26; --text-gray: #a0a0a0; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: #e0e0e0; margin: 0; overflow-x: hidden; user-select: none; }
-        
+
         .top-bar { background: rgba(0,0,0,0.9); padding: 10px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2d37; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
         .logo-main img { height: 55px; cursor: pointer; }
         .user-area { display: flex; align-items: center; gap: 25px; }
@@ -25,7 +25,7 @@
         .nav-btn.active, .nav-btn:hover { background: var(--primary); border-color: var(--primary); }
 
         .main-layout { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 320px; gap: 30px; padding: 0 20px; }
-        
+
         .news-card { background: var(--card-bg); border-radius: 10px; border: 1px solid #2a2d37; margin-bottom: 30px; overflow: hidden; cursor: pointer; transition: 0.2s; padding: 25px; }
         .news-card:hover { border-color: var(--primary); }
         .badge { background: var(--primary); padding: 4px 12px; border-radius: 3px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; font-family: 'Oswald'; }
@@ -53,6 +53,7 @@
         .admin-btn-edit { background: #0044cc; color: white; border: none; padding: 4px 8px; font-size: 0.65rem; cursor: pointer; border-radius: 3px; margin-top: 5px; font-family: 'Oswald'; }
     </style>
 </head>
+<body oncontextmenu="return false;">
 <body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
 
     <div class="top-bar">
@@ -77,7 +78,7 @@
     <div class="main-layout">
         <main>
             <div id="pagina-home"><div id="feed-page"></div></div>
-            
+
             <div id="pagina-noticia-aberta" class="hidden">
                 <div style="margin-bottom: 20px; display: flex; gap: 10px;">
                     <button class="nav-btn" onclick="voltarHome()" style="background:var(--primary)">VOLTAR</button>
@@ -93,7 +94,7 @@
                     <button class="nav-btn" id="tab-anuncio" onclick="switchTab('anuncio')">Anúncio</button>
                     <button class="nav-btn" id="tab-procurado" onclick="switchTab('procurado')">Procurado</button>
                 </div>
-                
+
                 <form id="form-noticia">
                     <input type="hidden" id="edit-id-article">
                     <input type="text" id="title" placeholder="Título da Matéria" required>
@@ -127,7 +128,7 @@
                     <input type="text" id="w-reward" placeholder="Recompensa">
                     <button type="submit" class="btn-publish">Salvar na Lista</button>
                 </form>
-                
+
                 <button onclick="voltarHome()" style="margin-top:15px; width:100%; padding:10px; background:#333; color:#fff; border:none; cursor:pointer; font-family:'Oswald'">Sair do Painel</button>
             </div>
         </main>
@@ -139,10 +140,6 @@
     </div>
 
     <script>
-            "andrewgallowaywfm": { nome: "Andrew Galloway", cargo: "admin" }, // Esse é você, apaga tudo
-    "senhaeditor1": { nome: "Joao", cargo: "editor" },     // Esse só posta/edita
-    "senhaeditor2": { nome: "Maria", cargo: "editor" }     // Esse só posta/edita
-        
         const firebaseConfig = {
             apiKey: "AIzaSyBTYu6dC3Iyz-qtjHKvLaq-B_4qXMb1C4w",
             authDomain: "weazelfm-dfb2e.firebaseapp.com",
@@ -154,12 +151,18 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        
+
         let isLogged = false, loggedUser = sessionStorage.getItem('weazel_user') || "", fontSize = 1.1, currentCategory = 'all';
         
       // BLOQUEIO TOTAL: F12, CTRL+U, INSPEÇÃO E BOTÃO DIREITO
 window.addEventListener('contextmenu', e => e.preventDefault());
 
+        // TRAVA F12, CONTROL U, CONTROL SHIFT I
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123) return false;
+            if(e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+        };
 window.addEventListener('keydown', e => {
     // Bloqueia F12
     if (e.key === "F12" || e.keyCode === 123) {
@@ -192,35 +195,11 @@ document.onselectstart = () => false;
         }
         setInterval(updateTime, 1000); updateTime();
 
-function handleAuth() {
-    if (isLogged) {
-        showPage('editor');
-    } else {
-        const p = prompt("Senha de Acesso:");
-        const user = credenciais[p];
-
-        if (user) {
-            isLogged = true;
-            loggedUser = user.nome;
-            userRole = user.cargo;
-            
-            sessionStorage.setItem('weazel_user', user.nome);
-            sessionStorage.setItem('weazel_role', user.cargo);
-            
-            document.getElementById('auth-btn').innerText = user.nome.toUpperCase();
-            alert(`Bem-vindo, ${user.nome}! Nível: ${user.cargo}`);
-            showPage('editor');
-            
-            // Recarrega o feed pra mostrar os botões certos de acordo com o cargo
-            db.ref('articles').once('value', s => renderFeed(s.val()));
-        } else {
-            alert("Senha inválida, ladrão!");
-        }
-    }
-}
-};
-
-let userRole = sessionStorage.getItem('weazel_role') || ""; // Pra saber se é admin ou editor
+        function handleAuth() {
+            if(isLogged) showPage('editor');
+            else {
+                const p = prompt("Senha:"); if(p === "andrewgallowaywfm") {
+                    const n = prompt("Seu Nome:"); if(n) { isLogged = true; loggedUser = n; sessionStorage.setItem('weazel_user', n); document.getElementById('auth-btn').innerText = n.toUpperCase(); showPage('editor'); }
                 }
             }
         }
@@ -252,7 +231,7 @@ let userRole = sessionStorage.getItem('weazel_role') || ""; // Pra saber se é a
             if(!data) return;
             const items = Object.keys(data).map(k => ({id:k, ...data[k]})).sort((a,b)=>b.timestamp-a.timestamp);
             const filtered = currentCategory === 'all' ? items : items.filter(i => i.category === currentCategory);
-            
+
             filtered.forEach(item => {
                 feed.innerHTML += `
                 <div class="news-card" onclick="abrirMateria('${item.id}')">
