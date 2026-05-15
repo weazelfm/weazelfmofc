@@ -316,16 +316,17 @@
         };
 
         db.ref('ads').on('value', s => {
-            const cont = document.getElementById('ads-container'); cont.innerHTML = '';
-            Object.keys(s.val() || {}).forEach(k => {
-                const a = s.val()[k];
-                cont.innerHTML += `
-                    <div style="margin-bottom:20px;">
-                        <a href="${a.link}" target="_blank"><img src="${a.img}" class="anuncio-img"></a>
-                        ${isLogged ? `<button class="admin-btn-del" onclick="db.ref('ads/${k}').remove()">Remover Anúncio</button>` : ''}
-                    </div>`;
-            });
-        });
+    const cont = document.getElementById('ads-container'); 
+    cont.innerHTML = '';
+    Object.keys(s.val() || {}).forEach(k => {
+        const a = s.val()[k];
+        cont.innerHTML += `
+            <div style="margin-bottom:20px; cursor: default;">
+                <img src="${a.img}" class="anuncio-img">
+                ${isLogged ? `<button class="admin-btn-del" onclick="db.ref('ads/${k}').remove()">Remover Anúncio</button>` : ''}
+            </div>`;
+    });
+});
 
         // --- PROCURADOS (CRIAR E ATUALIZAR) ---
         document.getElementById('form-procurado').onsubmit = function(e) {
