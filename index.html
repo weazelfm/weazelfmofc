@@ -23,32 +23,37 @@
 
         /* LAYOUT PRINCIPAL */
         .main-layout { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 320px; gap: 30px; padding: 0 20px; }
-        .sidebar { padding-top: 20px; }
+        .sidebar { padding-top: 20px; position: relative; }
         .sidebar-widget { background: var(--card-bg); border: 1px solid #2a2d37; border-radius: 8px; padding: 20px; margin-bottom: 30px; }
         .widget-title { font-family: 'Oswald'; text-transform: uppercase; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px; font-size: 1.2rem; }
         
-        /* PROCURADOS E ANÚNCIOS */
+        /* PROCURADOS E HOVER FICHA CRIMINAL */
         .procurado-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #2a2d37; padding-bottom: 10px; position: relative; }
-        .procurado-img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; background: #000; }
+        .procurado-img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; background: #000; cursor: pointer; }
         .procurado-info h4 { margin: 0; font-size: 0.9rem; font-family: 'Oswald'; }
         .procurado-status { font-size: 0.7rem; color: #ff4444; font-weight: bold; text-transform: uppercase; }
+        
+        /* A MÁGICA DA FICHA AQUI */
+        .ficha-hover { display: none; position: absolute; right: calc(100% + 20px); top: 0; background: #0a0a0c; border: 2px solid var(--primary); padding: 15px; width: 250px; z-index: 9999; border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.9); font-size: 0.8rem; pointer-events: none; }
+        .ficha-hover::after { content: ''; position: absolute; top: 20px; right: -12px; border-width: 6px; border-style: solid; border-color: transparent transparent transparent var(--primary); }
+        .procurado-item:hover .ficha-hover { display: block; animation: fadeIn 0.2s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+        .ficha-hover p { margin: 5px 0; color: #ccc; }
+        .ficha-hover b { color: #fff; font-family: 'Oswald'; letter-spacing: 0.5px; }
+
         .anuncio-img { width: 100%; border-radius: 4px; border: 1px solid #333; margin-bottom: 10px; }
 
-        /* NAVEGAÇÃO */
+        /* NAVEGAÇÃO E CARDS DE NOTÍCIA */
         .nav-container { max-width: 1200px; margin: 30px auto; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .nav-btn { background: var(--card-bg); border: 1px solid #333; color: #fff; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-family: 'Oswald'; text-transform: uppercase; transition: 0.2s; }
         .nav-btn.active, .nav-btn:hover { background: var(--primary); border-color: var(--primary); }
-
-        /* CARDS DE NOTÍCIA */
         .news-card { background: var(--card-bg); border-radius: 10px; border: 1px solid #2a2d37; margin-bottom: 30px; overflow: hidden; cursor: pointer; transition: 0.2s; }
         .news-card:hover { border-color: var(--primary); }
         .destaque-card { grid-column: 1 / -1; display: flex; border: 2px solid var(--primary); background: linear-gradient(90deg, #1c1e26 0%, #000 100%); }
         .destaque-card .news-title { font-size: 3.2rem !important; }
-        
         .badge { background: var(--primary); padding: 4px 12px; border-radius: 3px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; font-family: 'Oswald'; }
         .news-title { font-family: 'Oswald'; font-size: 1.8rem; margin: 10px 0; color: #fff; line-height: 1.1; }
         
-        /* CONTROLE DE FONTE */
         .font-controls { margin-bottom: 20px; display: flex; gap: 10px; align-items: center; }
         .btn-font { background: #333; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-family: 'Oswald'; font-size: 0.8rem; }
 
@@ -92,9 +97,7 @@
 
     <div class="main-layout">
         <main>
-            <div id="pagina-home">
-                <div id="feed-page"></div>
-            </div>
+            <div id="pagina-home"><div id="feed-page"></div></div>
 
             <div id="pagina-noticia-aberta" class="hidden">
                 <div class="font-controls">
@@ -140,10 +143,17 @@
                 </form>
 
                 <form id="form-procurado" class="hidden">
-                    <input type="text" id="w-name" placeholder="Nome do Criminoso" required>
+                    <input type="hidden" id="edit-id-w"> <input type="text" id="w-name" placeholder="Nome do Criminoso" required>
                     <input type="text" id="w-status" placeholder="Status (Ex: Procurado / Morto / Preso)" required>
                     <input type="url" id="w-img" placeholder="URL da Foto (Rosto)">
-                    <button type="submit" class="btn-publish">Adicionar à Lista</button>
+                    <hr style="border:0; border-top:1px solid #333; margin:15px 0">
+                    <input type="text" id="w-crime" placeholder="Crime Cometido" required>
+                    <input type="text" id="w-desc" placeholder="Descrição Física (Ex: Tatuagem no rosto, careca...)">
+                    <input type="text" id="w-loc" placeholder="Última Localização Conhecida">
+                    <input type="text" id="w-reward" placeholder="Recompensa ($)">
+                    <textarea id="w-obs" rows="3" placeholder="Observações e avisos da polícia..."></textarea>
+                    
+                    <button type="submit" id="btn-save-w" class="btn-publish">Adicionar à Lista</button>
                 </form>
 
                 <button type="button" onclick="showPage('feed')" class="login-btn" style="width:100%; margin-top:20px; background:#333">Sair do Painel</button>
@@ -220,7 +230,8 @@
             document.getElementById('pagina-home').classList.toggle('hidden', page !== 'feed');
             document.getElementById('pagina-noticia-aberta').classList.add('hidden');
             document.getElementById('editor-page').classList.toggle('hidden', page !== 'editor');
-            document.getElementById('main-sidebar').classList.toggle('hidden', page === 'editor');
+            // Só esconde a sidebar se estiver lendo notícia grande
+            document.getElementById('main-sidebar').classList.toggle('hidden', page === 'aberta');
             window.scrollTo(0,0);
         }
 
@@ -233,20 +244,16 @@
         document.getElementById('form-noticia').onsubmit = function(e) {
             e.preventDefault();
             const imgs = [
-                document.getElementById('img1').value,
-                document.getElementById('img2').value,
-                document.getElementById('img3').value,
-                document.getElementById('img4').value
+                document.getElementById('img1').value, document.getElementById('img2').value,
+                document.getElementById('img3').value, document.getElementById('img4').value
             ].filter(url => url.trim() !== "");
 
             db.ref('articles').push({
                 title: document.getElementById('title').value,
                 category: document.getElementById('category').value,
                 content: document.getElementById('content').value,
-                images: imgs,
-                author: loggedUser,
-                date: new Date().toLocaleString('pt-BR'),
-                timestamp: Date.now()
+                images: imgs, author: loggedUser,
+                date: new Date().toLocaleString('pt-BR'), timestamp: Date.now()
             });
             this.reset(); alert("Matéria enviada com sucesso!");
         };
@@ -295,9 +302,6 @@
                 document.getElementById('conteudo-aberto').innerHTML = layoutHtml;
                 document.getElementById('conteudo-aberto').style.fontSize = fontSize + 'rem';
                 showPage('aberta');
-                document.getElementById('pagina-noticia-aberta').classList.remove('hidden');
-                document.getElementById('pagina-home').classList.add('hidden');
-                document.getElementById('main-sidebar').classList.add('hidden');
             });
         }
 
@@ -323,17 +327,35 @@
             });
         });
 
-        // --- PROCURADOS ---
+        // --- PROCURADOS (CRIAR E ATUALIZAR) ---
         document.getElementById('form-procurado').onsubmit = function(e) {
             e.preventDefault();
-            db.ref('wanted').push({
+            const id = document.getElementById('edit-id-w').value;
+            const data = {
                 name: document.getElementById('w-name').value,
                 status: document.getElementById('w-status').value,
-                img: document.getElementById('w-img').value || 'https://via.placeholder.com/55'
-            });
-            this.reset(); alert("Meliante adicionado à lista!");
+                img: document.getElementById('w-img').value || 'https://via.placeholder.com/55',
+                crime: document.getElementById('w-crime').value,
+                desc: document.getElementById('w-desc').value,
+                loc: document.getElementById('w-loc').value,
+                reward: document.getElementById('w-reward').value,
+                obs: document.getElementById('w-obs').value
+            };
+
+            if(id) {
+                db.ref('wanted/' + id).update(data);
+                alert("Ficha atualizada com sucesso!");
+            } else {
+                db.ref('wanted').push(data);
+                alert("Meliante adicionado à lista!");
+            }
+            
+            this.reset();
+            document.getElementById('edit-id-w').value = "";
+            document.getElementById('btn-save-w').innerText = "Adicionar à Lista";
         };
 
+        // --- RENDERIZAR PROCURADOS E HOVER ---
         db.ref('wanted').on('value', s => {
             const cont = document.getElementById('wanted-container'); cont.innerHTML = '';
             Object.keys(s.val() || {}).forEach(k => {
@@ -344,13 +366,50 @@
                         <div class="procurado-info">
                             <h4>${w.name}</h4>
                             <div class="procurado-status">${w.status}</div>
-                            ${isLogged ? `<button class="admin-btn-del" onclick="db.ref('wanted/${k}').remove()">Remover</button>` : ''}
+                            ${isLogged ? `
+                                <div style="display:flex; gap:5px; margin-top:5px;">
+                                    <button class="admin-btn-del" style="background:#2196F3;" onclick="prepararEdicaoProcurado('${k}')">Editar</button>
+                                    <button class="admin-btn-del" onclick="if(confirm('Apagar ficha?')) db.ref('wanted/${k}').remove()">Remover</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="ficha-hover">
+                            <h4 style="color:var(--primary); font-family:'Oswald'; border-bottom:1px solid #333; padding-bottom:5px; margin-top:0;">📋 FICHA CRIMINAL</h4>
+                            <p><b>CRIME:</b> ${w.crime || 'Não informado'}</p>
+                            <p><b>CARACTERÍSTICAS:</b> ${w.desc || 'N/A'}</p>
+                            <p><b>ÚLT. VISTO:</b> ${w.loc || 'Desconhecida'}</p>
+                            <p><b>RECOMPENSA:</b> <span style="color:#ffd700">${w.reward || 'Nenhuma'}</span></p>
+                            <p><b>OBSERVAÇÕES:</b> ${w.obs || 'Nenhuma nota adicional.'}</p>
                         </div>
                     </div>`;
             });
         });
 
-        function voltarHome() { showPage('feed'); document.getElementById('main-sidebar').classList.remove('hidden'); }
+        // --- FUNÇÃO PARA JOGAR DADOS PRO FORMULÁRIO DE EDIÇÃO ---
+        window.prepararEdicaoProcurado = function(id) {
+            db.ref('wanted/' + id).once('value', s => {
+                const w = s.val();
+                document.getElementById('edit-id-w').value = id;
+                document.getElementById('w-name').value = w.name || '';
+                document.getElementById('w-status').value = w.status || '';
+                document.getElementById('w-img').value = w.img || '';
+                document.getElementById('w-crime').value = w.crime || '';
+                document.getElementById('w-desc').value = w.desc || '';
+                document.getElementById('w-loc').value = w.loc || '';
+                document.getElementById('w-reward').value = w.reward || '';
+                document.getElementById('w-obs').value = w.obs || '';
+                
+                document.getElementById('btn-save-w').innerText = "Atualizar Ficha";
+                
+                // Força a aba e página corretas abrirem
+                showPage('editor');
+                document.querySelectorAll('.tab-btn')[2].click(); // Clica na aba Procurados
+                window.scrollTo(0,0);
+            });
+        }
+
+        function voltarHome() { showPage('feed'); }
         
         function filterNews(c, b) {
             document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
@@ -368,8 +427,9 @@
                             <div style="padding:30px; flex: 1;">
                                 <span class="badge">${item.category}</span>
                                 <h2 class="news-title">${item.title}</h2>
-                                <p style="color:#aaa">${item.content.substring(0, 100)}...</p>
-                                ${isLogged ? `<button class="admin-btn-del" onclick="event.stopPropagation(); if(confirm('Apagar?')) db.ref('articles/${item.id}').remove()">Apagar</button>` : ''}
+                                <p style="color:#aaa; line-height:1.5;">${item.content.substring(0, isDest ? 280 : 120)}...</p>
+                                <span style="font-size:0.75rem; color:#555">Por ${item.author} | ${item.date}</span>
+                                ${isLogged ? `<br><button class="admin-btn-del" onclick="event.stopPropagation(); if(confirm('Apagar?')) db.ref('articles/${item.id}').remove()">Apagar</button>` : ''}
                             </div>
                         </div>`;
                 });
