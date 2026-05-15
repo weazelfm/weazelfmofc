@@ -199,12 +199,10 @@ document.onselectstart = () => false;
             if(isLogged) showPage('editor');
             else {
                 const p = prompt("Senha:"); if(p === "andrewgallowaywfm") {
-                    const p = prompt("Senha:"); if(p === "testedogordão") {
                     const n = prompt("Seu Nome:"); if(n) { isLogged = true; loggedUser = n; sessionStorage.setItem('weazel_user', n); document.getElementById('auth-btn').innerText = n.toUpperCase(); showPage('editor'); }
                 }
             }
         }
-     }
 
         function showPage(p) {
             document.getElementById('pagina-home').classList.add('hidden');
