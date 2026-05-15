@@ -6,9 +6,13 @@
     <title>Weazel FM - A rádio da cidade</title>
     <link rel="icon" type="image/png" href="ChatGPT Image 12 de mai. de 2026, 15_45_01.png">
 
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    
+    <!-- Google Fonts & FontAwesome -->
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         :root { --primary: #cc0000; --bg-dark: #0f1014; --card-bg: #1c1e26; --text-gray: #a0a0a0; }
@@ -21,7 +25,8 @@
         .login-btn:hover { background: var(--primary); border-color: var(--primary); }
 
         .nav-container { max-width: 1200px; margin: 30px auto; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        .nav-btn { background: var(--card-bg); border: 1px solid #333; color: #fff; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-family: 'Oswald'; text-transform: uppercase; transition: 0.2s; }
+        .nav-btn { background: var(--card-bg); border: 1px solid #333; color: #fff; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-family: 'Oswald'; text-transform: uppercase; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+        .nav-btn i { font-size: 1.1rem; }
         .nav-btn.active, .nav-btn:hover { background: var(--primary); border-color: var(--primary); }
 
         .main-layout { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 320px; gap: 30px; padding: 0 20px; }
@@ -53,7 +58,6 @@
         .admin-btn-edit { background: #0044cc; color: white; border: none; padding: 4px 8px; font-size: 0.65rem; cursor: pointer; border-radius: 3px; margin-top: 5px; font-family: 'Oswald'; }
     </style>
 </head>
-<body oncontextmenu="return false;">
 <body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
 
     <div class="top-bar">
@@ -68,11 +72,11 @@
     </div>
 
     <nav class="nav-container" id="filter-nav">
-        <button class="nav-btn active" onclick="filterNews('all', this)">📌 Início</button>
-        <button class="nav-btn" onclick="filterNews('Plantão Policial', this)">🚔 Policial</button>
-        <button class="nav-btn" onclick="filterNews('Esportes', this)">🏀 Esportes</button>
-        <button class="nav-btn" onclick="filterNews('Cotidiano', this)">🌆 Cotidiano</button>
-        <button class="nav-btn" onclick="filterNews('Opinião', this)">✍️ Opinião</button>
+        <button class="nav-btn active" onclick="filterNews('all', this)"><i class="fa-solid fa-house"></i> Início</button>
+        <button class="nav-btn" onclick="filterNews('Plantão Policial', this)"><i class="fa-solid fa-shield-halved"></i> Policial</button>
+        <button class="nav-btn" onclick="filterNews('Esportes', this)"><i class="fa-solid fa-trophy"></i> Esportes</button>
+        <button class="nav-btn" onclick="filterNews('Cotidiano', this)"><i class="fa-solid fa-city"></i> Cotidiano</button>
+        <button class="nav-btn" onclick="filterNews('Opinião', this)"><i class="fa-solid fa-pen"></i> Opinião</button>
     </nav>
 
     <div class="main-layout">
@@ -81,7 +85,7 @@
 
             <div id="pagina-noticia-aberta" class="hidden">
                 <div style="margin-bottom: 20px; display: flex; gap: 10px;">
-                    <button class="nav-btn" onclick="voltarHome()" style="background:var(--primary)">VOLTAR</button>
+                    <button class="nav-btn" onclick="voltarHome()" style="background:var(--primary)"><i class="fa-solid fa-arrow-left"></i> VOLTAR</button>
                     <button class="nav-btn" onclick="changeFontSize(0.1)">A+</button>
                     <button class="nav-btn" onclick="changeFontSize(-0.1)">A-</button>
                 </div>
@@ -90,9 +94,9 @@
 
             <div id="editor-page" class="editor-section hidden">
                 <div style="margin-bottom:20px; display: flex; gap: 10px;">
-                    <button class="nav-btn active" id="tab-noticia" onclick="switchTab('noticia')">Matéria</button>
-                    <button class="nav-btn" id="tab-anuncio" onclick="switchTab('anuncio')">Anúncio</button>
-                    <button class="nav-btn" id="tab-procurado" onclick="switchTab('procurado')">Procurado</button>
+                    <button class="nav-btn active" id="tab-noticia" onclick="switchTab('noticia')"><i class="fa-solid fa-newspaper"></i> Matéria</button>
+                    <button class="nav-btn" id="tab-anuncio" onclick="switchTab('anuncio')"><i class="fa-solid fa-bullhorn"></i> Anúncio</button>
+                    <button class="nav-btn" id="tab-procurado" onclick="switchTab('procurado')"><i class="fa-solid fa-user-secret"></i> Procurado</button>
                 </div>
 
                 <form id="form-noticia">
@@ -121,7 +125,7 @@
                 </form>
 
                 <form id="form-procurado" class="hidden">
-                    <input type="text" id="w-name" placeholder="Nome do Melianete" required>
+                    <input type="text" id="w-name" placeholder="Nome do Meliante" required>
                     <input type="text" id="w-status" placeholder="Status (ex: PROCURADO)">
                     <input type="url" id="w-img" placeholder="URL da Foto">
                     <input type="text" id="w-crime" placeholder="Crimes Cometidos">
@@ -129,13 +133,13 @@
                     <button type="submit" class="btn-publish">Salvar na Lista</button>
                 </form>
 
-                <button onclick="voltarHome()" style="margin-top:15px; width:100%; padding:10px; background:#333; color:#fff; border:none; cursor:pointer; font-family:'Oswald'">Sair do Painel</button>
+                <button onclick="voltarHome()" style="margin-top:15px; width:100%; padding:10px; background:#333; color:#fff; border:none; cursor:pointer; font-family:'Oswald'"><i class="fa-solid fa-xmark"></i> Sair do Painel</button>
             </div>
         </main>
 
         <aside id="main-sidebar">
-            <div class="sidebar-widget"><div class="widget-title">📢 PATROCÍNIO:</div><div id="ads-container"></div></div>
-            <div class="sidebar-widget"><div class="widget-title">🚔 PROCURADOS:</div><div id="wanted-container"></div></div>
+            <div class="sidebar-widget"><div class="widget-title"><i class="fa-solid fa-bullhorn" style="color: var(--primary);"></i> PATROCÍNIO:</div><div id="ads-container"></div></div>
+            <div class="sidebar-widget"><div class="widget-title"><i class="fa-solid fa-handcuffs" style="color: var(--primary);"></i> PROCURADOS:</div><div id="wanted-container"></div></div>
         </aside>
     </div>
 
@@ -154,37 +158,30 @@
 
         let isLogged = false, loggedUser = sessionStorage.getItem('weazel_user') || "", fontSize = 1.1, currentCategory = 'all';
 
-      // BLOQUEIO TOTAL: F12, CTRL+U, INSPEÇÃO E BOTÃO DIREITO
-window.addEventListener('contextmenu', e => e.preventDefault());
+        // BLOQUEIO TOTAL: F12, CTRL+U, INSPEÇÃO E BOTÃO DIREITO
+        window.addEventListener('contextmenu', e => e.preventDefault());
 
-        // TRAVA F12, CONTROL U, CONTROL SHIFT I
         document.onkeydown = function(e) {
             if(e.keyCode == 123) return false;
             if(e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
             if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
         };
-window.addEventListener('keydown', e => {
-    // Bloqueia F12
-    if (e.key === "F12" || e.keyCode === 123) {
-        e.preventDefault();
-        return false;
-    }
+        window.addEventListener('keydown', e => {
+            if (e.key === "F12" || e.keyCode === 123) {
+                e.preventDefault();
+                return false;
+            }
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 's' || e.keyCode === 85 || e.keyCode === 83)) {
+                e.preventDefault();
+                return false;
+            }
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) {
+                e.preventDefault();
+                return false;
+            }
+        }, { capture: true });
 
-    // Bloqueia Ctrl+U (Source) e Ctrl+S (Salvar)
-    if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 's' || e.keyCode === 85 || e.keyCode === 83)) {
-        e.preventDefault();
-        return false;
-    }
-
-    // Bloqueia Ctrl+Shift+I, J, C (Inspeção)
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) {
-        e.preventDefault();
-        return false;
-    }
-}, { capture: true });
-
-// Bloqueia seleção de texto para dificultar cópia
-document.onselectstart = () => false;
+        document.onselectstart = () => false;
 
         if(loggedUser) { isLogged = true; document.getElementById('auth-btn').innerText = loggedUser.toUpperCase(); }
 
@@ -341,9 +338,9 @@ document.onselectstart = () => false;
 
         function voltarHome() { showPage('feed'); }
         function changeFontSize(v) {
-    fontSize += v;
-    document.querySelector('#conteudo-aberto .content-body').style.fontSize = fontSize + 'rem';
-}
+            fontSize += v;
+            document.querySelector('#conteudo-aberto .content-body').style.fontSize = fontSize + 'rem';
+        }
     </script>
 </body>
 </html>
