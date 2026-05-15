@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/bs6MEzC.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEAZEL FM, A VOZ DA LIBERDADE</title>
-    <link rel="icon" type="image/png" href="https://i.imgur.com/vHqY7bM.png">
+    <title>Wweazel FM, A rádio da cidade</title>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/bs6MEzC.png">
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -12,44 +13,57 @@
         :root { --primary: #cc0000; --bg-dark: #0f1014; --card-bg: #1c1e26; --text-gray: #a0a0a0; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: #e0e0e0; margin: 0; overflow-x: hidden; }
         
+        /* BARRA SUPERIOR */
         .top-bar { background: rgba(0,0,0,0.9); padding: 10px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2d37; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
         .logo-main img { height: 55px; cursor: pointer; }
         .user-area { display: flex; align-items: center; gap: 25px; }
         .login-btn { background: #2a2d37; color: #fff; border: 1px solid #444; padding: 6px 15px; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; font-weight: bold; }
-        
+        .login-btn:hover { background: var(--primary); border-color: var(--primary); }
+
+        /* LAYOUT PRINCIPAL */
         .main-layout { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 320px; gap: 30px; padding: 0 20px; }
         .sidebar { padding-top: 20px; }
         .sidebar-widget { background: var(--card-bg); border: 1px solid #2a2d37; border-radius: 8px; padding: 20px; margin-bottom: 30px; }
         .widget-title { font-family: 'Oswald'; text-transform: uppercase; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px; font-size: 1.2rem; }
         
+        /* PROCURADOS E ANÚNCIOS */
         .procurado-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #2a2d37; padding-bottom: 10px; position: relative; }
-        .procurado-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; background: #000; }
+        .procurado-img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; background: #000; }
         .procurado-info h4 { margin: 0; font-size: 0.9rem; font-family: 'Oswald'; }
         .procurado-status { font-size: 0.7rem; color: #ff4444; font-weight: bold; text-transform: uppercase; }
+        .anuncio-img { width: 100%; border-radius: 4px; border: 1px solid #333; margin-bottom: 10px; }
 
-        .anuncio-img { width: 100%; border-radius: 4px; border: 1px solid #333; margin-bottom: 10px; transition: 0.3s; }
-        .anuncio-img:hover { border-color: var(--primary); }
-
+        /* NAVEGAÇÃO */
         .nav-container { max-width: 1200px; margin: 30px auto; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        .nav-btn { background: var(--card-bg); border: 1px solid #333; color: #fff; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-family: 'Oswald'; text-transform: uppercase; }
+        .nav-btn { background: var(--card-bg); border: 1px solid #333; color: #fff; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-family: 'Oswald'; text-transform: uppercase; transition: 0.2s; }
         .nav-btn.active, .nav-btn:hover { background: var(--primary); border-color: var(--primary); }
 
+        /* CARDS DE NOTÍCIA */
         .news-card { background: var(--card-bg); border-radius: 10px; border: 1px solid #2a2d37; margin-bottom: 30px; overflow: hidden; cursor: pointer; transition: 0.2s; }
-        .destaque-card { grid-column: 1 / -1; display: flex; border: 2px solid var(--primary); }
-        .badge { background: var(--primary); padding: 4px 12px; border-radius: 3px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; font-family: 'Oswald'; }
+        .news-card:hover { border-color: var(--primary); }
+        .destaque-card { grid-column: 1 / -1; display: flex; border: 2px solid var(--primary); background: linear-gradient(90deg, #1c1e26 0%, #000 100%); }
+        .destaque-card .news-title { font-size: 3.2rem !important; }
         
-        /* EDITOR TABS */
-        .editor-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { flex: 1; padding: 10px; background: #222; color: #fff; border: 1px solid #444; cursor: pointer; font-family: 'Oswald'; text-transform: uppercase; }
-        .tab-btn.active { background: var(--primary); border-color: var(--primary); }
+        .badge { background: var(--primary); padding: 4px 12px; border-radius: 3px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; font-family: 'Oswald'; }
+        .news-title { font-family: 'Oswald'; font-size: 1.8rem; margin: 10px 0; color: #fff; line-height: 1.1; }
+        
+        /* CONTROLE DE FONTE */
+        .font-controls { margin-bottom: 20px; display: flex; gap: 10px; align-items: center; }
+        .btn-font { background: #333; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-family: 'Oswald'; font-size: 0.8rem; }
 
+        /* EDITOR E TABS */
         .editor-section { background: var(--card-bg); padding: 40px; border-radius: 12px; border: 1px solid #333; }
-        input, textarea, select { width: 100%; background: #0f1014; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 4px; margin-bottom: 15px; box-sizing: border-box; }
-        .btn-publish { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; font-weight: 800; text-transform: uppercase; cursor: pointer; font-family: 'Oswald'; }
+        .editor-tabs { display: flex; gap: 10px; margin-bottom: 25px; }
+        .tab-btn { flex: 1; padding: 12px; background: #111; color: #666; border: 1px solid #333; cursor: pointer; font-family: 'Oswald'; text-transform: uppercase; font-weight: bold; }
+        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        input, textarea, select { width: 100%; background: #0f1014; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 4px; margin-bottom: 12px; box-sizing: border-box; font-family: 'Inter'; }
+        .btn-publish { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; font-weight: 800; text-transform: uppercase; cursor: pointer; border-radius: 4px; font-family: 'Oswald'; font-size: 1.1rem; }
         
         .hidden { display: none; }
-        .admin-btn-del { background: #b00; color: white; border: none; padding: 3px 8px; font-size: 0.6rem; cursor: pointer; border-radius: 3px; margin-top: 5px; }
+        .admin-btn-del { background: #600; color: white; border: none; padding: 4px 8px; font-size: 0.65rem; cursor: pointer; border-radius: 3px; margin-top: 8px; font-family: 'Oswald'; text-transform: uppercase; }
         footer { text-align: center; padding: 40px; color: #444; font-size: 0.8rem; border-top: 1px solid #222; }
+        .news-img-full { width: 100%; border-radius: 8px; margin: 25px 0; border: 1px solid #333; }
     </style>
 </head>
 <body>
@@ -76,70 +90,79 @@
     </nav>
 
     <div class="main-layout">
-        <main class="container">
+        <main>
             <div id="pagina-home">
                 <div id="feed-page"></div>
             </div>
 
             <div id="pagina-noticia-aberta" class="hidden">
-                <button class="login-btn" onclick="voltarHome()" style="margin-bottom:20px">⬅ VOLTAR</button>
-                <div class="news-card" style="cursor: default; padding: 40px;">
+                <div class="font-controls">
+                    <button class="btn-font" onclick="changeFontSize(0.1)">A+</button>
+                    <button class="btn-font" onclick="changeFontSize(-0.1)">A-</button>
+                    <button class="btn-font" onclick="voltarHome()" style="background:var(--primary); margin-left:auto">VOLTAR PARA HOME</button>
+                </div>
+                <div class="news-card" style="cursor: default; padding: 45px;" id="texto-noticia">
                     <div id="conteudo-aberto"></div>
                 </div>
             </div>
 
             <div id="editor-page" class="editor-section hidden">
                 <div class="editor-tabs">
-                    <button class="tab-btn active" onclick="switchTab('noticia')">Notícias</button>
-                    <button class="tab-btn" onclick="switchTab('anuncio')">Anúncios</button>
-                    <button class="tab-btn" onclick="switchTab('procurado')">Procurados</button>
+                    <button class="tab-btn active" onclick="switchTab('noticia')">Postar Notícia</button>
+                    <button class="tab-btn" onclick="switchTab('anuncio')">Gerenciar Anúncios</button>
+                    <button class="tab-btn" onclick="switchTab('procurado')">Lista de Procurados</button>
                 </div>
 
                 <form id="form-noticia">
-                    <input type="text" id="title" placeholder="Título da Matéria" required>
+                    <input type="text" id="title" placeholder="Título Impactante" required>
                     <select id="category">
                         <option value="Plantão Policial">Plantão Policial</option>
                         <option value="Esportes">Esportes</option>
                         <option value="Cotidiano">Cotidiano</option>
                         <option value="Opinião">Opinião</option>
                     </select>
-                    <textarea id="content" rows="8" placeholder="Texto da matéria..." required></textarea>
-                    <input type="url" id="img1" placeholder="URL Imagem Principal">
-                    <button type="submit" class="btn-publish">Publicar Notícia</button>
+                    <textarea id="content" rows="10" placeholder="Escreva a matéria aqui..." required></textarea>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="url" id="img1" placeholder="URL Imagem 1 (Principal)">
+                        <input type="url" id="img2" placeholder="URL Imagem 2">
+                        <input type="url" id="img3" placeholder="URL Imagem 3">
+                        <input type="url" id="img4" placeholder="URL Imagem 4">
+                    </div>
+                    <button type="submit" class="btn-publish">Publicar Matéria</button>
                 </form>
 
                 <form id="form-anuncio" class="hidden">
-                    <input type="text" id="ad-title" placeholder="Nome do Anunciante" required>
-                    <input type="url" id="ad-img" placeholder="URL da Arte do Anúncio" required>
-                    <input type="url" id="ad-link" placeholder="Link (Opcional)">
+                    <input type="text" id="ad-title" placeholder="Nome da Empresa/Anunciante" required>
+                    <input type="url" id="ad-img" placeholder="URL do Banner do Anúncio" required>
+                    <input type="url" id="ad-link" placeholder="Link de Destino (Opcional)">
                     <button type="submit" class="btn-publish">Salvar Anúncio</button>
                 </form>
 
                 <form id="form-procurado" class="hidden">
-                    <input type="text" id="w-name" placeholder="Nome do Meliante" required>
-                    <input type="text" id="w-status" placeholder="Status (Ex: Procurado / Perigoso)" required>
-                    <input type="url" id="w-img" placeholder="URL da Foto do Rosto">
-                    <button type="submit" class="btn-publish">Adicionar à Lista Negra</button>
+                    <input type="text" id="w-name" placeholder="Nome do Criminoso" required>
+                    <input type="text" id="w-status" placeholder="Status (Ex: Procurado / Morto / Preso)" required>
+                    <input type="url" id="w-img" placeholder="URL da Foto (Rosto)">
+                    <button type="submit" class="btn-publish">Adicionar à Lista</button>
                 </form>
 
-                <button type="button" onclick="showPage('feed')" class="login-btn" style="width:100%; margin-top:20px">Sair do Editor</button>
+                <button type="button" onclick="showPage('feed')" class="login-btn" style="width:100%; margin-top:20px; background:#333">Sair do Painel</button>
             </div>
         </main>
 
         <aside class="sidebar" id="main-sidebar">
             <div class="sidebar-widget">
-                <div class="widget-title">📢 Patrocínio</div>
+                <div class="widget-title">📢 Patrocínio Weazel</div>
                 <div id="ads-container"></div>
             </div>
 
             <div class="sidebar-widget">
-                <div class="widget-title">🚔 Mais Procurados</div>
+                <div class="widget-title">🚔 Most Wanted</div>
                 <div id="wanted-container"></div>
             </div>
         </aside>
     </div>
 
-    <footer>&copy; 2026 WEAZEL FM - A Voz de Los Santos.</footer>
+    <footer>&copy; 2026 WEAZEL FM - Confirming Your Prejudices.</footer>
 
     <script>
         const firebaseConfig = {
@@ -156,6 +179,7 @@
 
         let isLogged = false;
         let loggedUser = sessionStorage.getItem('weazel_user') || "";
+        let fontSize = 1.1;
         const PASS = "andrewgallowaywfm";
 
         if(loggedUser) { isLogged = true; document.getElementById('auth-btn').innerText = loggedUser.toUpperCase(); }
@@ -170,9 +194,9 @@
         function handleAuth() {
             if (isLogged) { showPage('editor'); } 
             else {
-                const p = prompt("Senha:");
+                const p = prompt("Senha da Redação:");
                 if (p === PASS) {
-                    const n = prompt("Seu Nome:");
+                    const n = prompt("Seu Nome de Jornalista:");
                     if (n) {
                         isLogged = true; loggedUser = n;
                         sessionStorage.setItem('weazel_user', n);
@@ -199,19 +223,31 @@
             window.scrollTo(0,0);
         }
 
-        // --- LÓGICA DE NOTÍCIAS ---
+        function changeFontSize(v) {
+            fontSize += v;
+            document.getElementById('conteudo-aberto').style.fontSize = fontSize + 'rem';
+        }
+
+        // --- NOTÍCIAS (4 IMAGENS) ---
         document.getElementById('form-noticia').onsubmit = function(e) {
             e.preventDefault();
+            const imgs = [
+                document.getElementById('img1').value,
+                document.getElementById('img2').value,
+                document.getElementById('img3').value,
+                document.getElementById('img4').value
+            ].filter(url => url.trim() !== "");
+
             db.ref('articles').push({
                 title: document.getElementById('title').value,
                 category: document.getElementById('category').value,
                 content: document.getElementById('content').value,
-                images: [document.getElementById('img1').value],
+                images: imgs,
                 author: loggedUser,
                 date: new Date().toLocaleString('pt-BR'),
                 timestamp: Date.now()
             });
-            this.reset(); alert("Notícia publicada!");
+            this.reset(); alert("Matéria enviada com sucesso!");
         };
 
         db.ref('articles').on('value', s => {
@@ -221,11 +257,12 @@
                 const isDest = i === 0;
                 feed.innerHTML += `
                     <div class="news-card ${isDest ? 'destaque-card' : ''}" onclick="abrirMateria('${item.id}')">
-                        <div style="padding:25px">
+                        <div style="padding:30px; flex: 1;">
                             <span class="badge">${item.category}</span>
-                            <h2 class="news-title" style="font-size:${isDest ? '3rem':'1.5rem'}">${item.title}</h2>
-                            <p style="color:#aaa">${item.content.substring(0, 100)}...</p>
-                            ${isLogged ? `<button class="admin-btn-del" onclick="event.stopPropagation(); db.ref('articles/${item.id}').remove()">Apagar</button>` : ''}
+                            <h2 class="news-title">${item.title}</h2>
+                            <p style="color:#aaa; line-height: 1.5;">${item.content.substring(0, isDest ? 280 : 120)}...</p>
+                            <span style="font-size:0.75rem; color:#555">Por ${item.author} | ${item.date}</span>
+                            ${isLogged ? `<br><button class="admin-btn-del" onclick="event.stopPropagation(); if(confirm('Apagar?')) db.ref('articles/${item.id}').remove()">Apagar Matéria</button>` : ''}
                         </div>
                     </div>`;
             });
@@ -234,29 +271,44 @@
         function abrirMateria(id) {
             db.ref('articles/'+id).once('value', s => {
                 const item = s.val();
-                document.getElementById('conteudo-aberto').innerHTML = `
+                let layoutHtml = `
                     <span class="badge">${item.category}</span>
-                    <h1 class="news-title" style="font-size:3rem">${item.title}</h1>
-                    <p style="font-size:0.8rem; color:#666">Por ${item.author} em ${item.date}</p>
-                    <hr border="0" height="1px" background="#222">
-                    <div style="font-size:1.1rem; line-height:1.8; color:#ccc">
-                        ${item.images ? `<img src="${item.images[0]}" style="width:100%; margin:20px 0">` : ''}
-                        ${item.content.replace(/\n/g, '<br>')}
-                    </div>`;
+                    <h1 class="news-title" style="font-size:3.5rem; margin-bottom:10px">${item.title}</h1>
+                    <p style="color:#666; font-size:0.9rem">Publicado por <b>${item.author}</b> em ${item.date}</p>
+                    <hr style="border:0; border-top:1px solid #333; margin:30px 0">
+                    <div id="corpo-texto">`;
+                
+                const paragraphs = item.content.split('\n');
+                let imgIdx = 0;
+                paragraphs.forEach((p, i) => {
+                    if(p.trim()) {
+                        layoutHtml += `<p>${p}</p>`;
+                        // Distribui as imagens entre os parágrafos
+                        if(item.images && item.images[imgIdx]) {
+                            layoutHtml += `<img src="${item.images[imgIdx]}" class="news-img-full">`;
+                            imgIdx++;
+                        }
+                    }
+                });
+
+                layoutHtml += `</div>`;
+                document.getElementById('conteudo-aberto').innerHTML = layoutHtml;
+                document.getElementById('conteudo-aberto').style.fontSize = fontSize + 'rem';
                 showPage('aberta');
                 document.getElementById('pagina-noticia-aberta').classList.remove('hidden');
                 document.getElementById('pagina-home').classList.add('hidden');
+                document.getElementById('main-sidebar').classList.add('hidden');
             });
         }
 
-        // --- LÓGICA DE ANÚNCIOS ---
+        // --- ANÚNCIOS ---
         document.getElementById('form-anuncio').onsubmit = function(e) {
             e.preventDefault();
             db.ref('ads').push({
                 img: document.getElementById('ad-img').value,
                 link: document.getElementById('ad-link').value || '#'
             });
-            this.reset(); alert("Anúncio salvo!");
+            this.reset(); alert("Anúncio cadastrado!");
         };
 
         db.ref('ads').on('value', s => {
@@ -264,22 +316,22 @@
             Object.keys(s.val() || {}).forEach(k => {
                 const a = s.val()[k];
                 cont.innerHTML += `
-                    <div style="margin-bottom:15px; position:relative">
+                    <div style="margin-bottom:20px;">
                         <a href="${a.link}" target="_blank"><img src="${a.img}" class="anuncio-img"></a>
                         ${isLogged ? `<button class="admin-btn-del" onclick="db.ref('ads/${k}').remove()">Remover Anúncio</button>` : ''}
                     </div>`;
             });
         });
 
-        // --- LÓGICA DE PROCURADOS ---
+        // --- PROCURADOS ---
         document.getElementById('form-procurado').onsubmit = function(e) {
             e.preventDefault();
             db.ref('wanted').push({
                 name: document.getElementById('w-name').value,
                 status: document.getElementById('w-status').value,
-                img: document.getElementById('w-img').value || 'https://via.placeholder.com/50'
+                img: document.getElementById('w-img').value || 'https://via.placeholder.com/55'
             });
-            this.reset(); alert("Meliante adicionado!");
+            this.reset(); alert("Meliante adicionado à lista!");
         };
 
         db.ref('wanted').on('value', s => {
@@ -292,17 +344,36 @@
                         <div class="procurado-info">
                             <h4>${w.name}</h4>
                             <div class="procurado-status">${w.status}</div>
-                            ${isLogged ? `<button class="admin-btn-del" onclick="db.ref('wanted/${k}').remove()">Retirar Lista</button>` : ''}
+                            ${isLogged ? `<button class="admin-btn-del" onclick="db.ref('wanted/${k}').remove()">Remover</button>` : ''}
                         </div>
                     </div>`;
             });
         });
 
-        function voltarHome() { showPage('feed'); }
+        function voltarHome() { showPage('feed'); document.getElementById('main-sidebar').classList.remove('hidden'); }
+        
+        // Filtros
         function filterNews(c, b) {
             document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
             b.classList.add('active');
-            db.ref('articles').once('value', s => render(s.val(), c)); // Note: render logic shared with initial load
+            db.ref('articles').once('value', s => {
+                const data = s.val();
+                const feed = document.getElementById('feed-page'); feed.innerHTML = '';
+                const items = Object.keys(data || {}).map(k => ({id:k, ...data[k]})).sort((a,b)=>b.timestamp - a.timestamp);
+                const filtered = c === 'all' ? items : items.filter(a => a.category === c);
+                filtered.forEach((item, i) => {
+                    const isDest = c === 'all' && i === 0;
+                    feed.innerHTML += `
+                        <div class="news-card ${isDest ? 'destaque-card' : ''}" onclick="abrirMateria('${item.id}')">
+                            <div style="padding:30px; flex: 1;">
+                                <span class="badge">${item.category}</span>
+                                <h2 class="news-title">${item.title}</h2>
+                                <p style="color:#aaa">${item.content.substring(0, 100)}...</p>
+                                ${isLogged ? `<button class="admin-btn-del" onclick="event.stopPropagation(); if(confirm('Apagar?')) db.ref('articles/${item.id}').remove()">Apagar</button>` : ''}
+                            </div>
+                        </div>`;
+                });
+            });
         }
     </script>
 </body>
