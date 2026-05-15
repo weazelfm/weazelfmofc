@@ -234,7 +234,13 @@ document.onselectstart = () => false;
 
             filtered.forEach(item => {
                 feed.innerHTML += `
-                <div class="news-card" onclick="abrirMateria('${item.id}')">
+                <div class="news-card" onclick="abrirMateria('${item.id}')">            
+document.getElementById('conteudo-aberto').innerHTML = `
+    <span class="badge">${item.category}</span>
+    <h1 class="news-title" style="font-size:3rem">${item.title}</h1>
+    <p style="color:#666">Por ${item.author} | ${item.date}</p>
+    <hr style="border:0; border-top:1px solid #333; margin:20px 0">
+    <div id="texto-materia-real" class="content-body" style="font-size:${fontSize}rem">${texto}</div>`;
                     <span class="badge">${item.category}</span>
                     <h2 class="news-title">${item.title}</h2>
                     <div class="news-summary">${item.content.substring(0, 180)}...</div>
@@ -340,7 +346,17 @@ document.onselectstart = () => false;
         });
 
         function voltarHome() { showPage('feed'); }
-        function changeFontSize(v) { fontSize += v; document.getElementById('conteudo-aberto').style.fontSize = fontSize + 'rem'; }
+function changeFontSize(v) {
+    fontSize += v;
+    // Garante que não fique pequeno demais nem gigante
+    if(fontSize < 0.8) fontSize = 0.8;
+    if(fontSize > 2.0) fontSize = 2.0;
+
+    const elementoTexto = document.getElementById('texto-materia-real');
+    if(elementoTexto) {
+        elementoTexto.style.fontSize = fontSize + 'rem';
+    }
+}
     </script>
 </body>
 </html>
