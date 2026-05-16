@@ -58,7 +58,6 @@
         .admin-btn-del { background: #600; color: white; border: none; padding: 4px 8px; font-size: 0.65rem; cursor: pointer; border-radius: 3px; margin-top: 5px; font-family: 'Oswald'; margin-right: 5px; }
         .admin-btn-edit { background: #0044cc; color: white; border: none; padding: 4px 8px; font-size: 0.65rem; cursor: pointer; border-radius: 3px; margin-top: 5px; font-family: 'Oswald'; }
         
-        /* NOVO: Estilos da área de comentários e status */
         .stat-icon { color: var(--primary); font-size: 0.9rem; margin-right: 5px; }
         .stats-area { font-size: 0.8rem; color: #888; margin-top: 15px; display: flex; gap: 15px; align-items: center; }
         
@@ -283,13 +282,11 @@
         }
 
         function abrirMateria(id) {
-            // Remove o listener de comentários anterior (se houver) para evitar duplicatas
             if(currentCommentListener) { currentCommentListener.off(); }
 
             db.ref('articles/'+id).once('value', s => {
                 const item = s.val();
                 
-                // SISTEMA DE VIEWS: Incrementa o valor assim que a matéria é aberta
                 let newViews = (item.views || 0) + 1;
                 db.ref('articles/'+id).update({ views: newViews });
 
@@ -315,7 +312,6 @@
                     <hr style="border:0; border-top:1px solid #333; margin:20px 0">
                     <div class="content-body" style="font-size:${fontSize}rem">${texto}</div>
                     
-                    <!-- SISTEMA DE COMENTÁRIOS -->
                     <div class="comment-section">
                         <h2 style="font-family:'Oswald'; border-bottom: 2px solid var(--primary); padding-bottom: 5px; display: inline-block;">COMENTÁRIOS</h2>
                         
@@ -333,7 +329,6 @@
                 
                 showPage('aberta');
 
-                // Listener em tempo real para os comentários desta matéria
                 currentCommentListener = db.ref('articles/'+id+'/comments');
                 currentCommentListener.on('value', snap => {
                     const cList = document.getElementById('lista-comentarios');
@@ -344,12 +339,18 @@
                         const arr = Object.keys(coms).map(k => ({id:k, ...coms[k]})).sort((a,b)=>b.timestamp-a.timestamp);
                         arr.forEach(c => {
                             cList.innerHTML += `
-                            <div class="comment-item">
+                            <div class="comment-item" id="comment-${c.id}">
                                 <div class="comment-header">
                                     <span class="comment-author">${c.nome}</span>
                                     <span class="comment-date">${c.data}</span>
                                 </div>
-                                <div class="comment-text">${c.texto}</div>
+                                <div class="comment-text" id="text-${c.id}">${c.texto}</div>
+                                ${isLogged ? `
+                                <div style="margin-top: 10px;">
+                                    <button class="admin-btn-del" onclick="apagarComentario('${id}', '${c.id}')">Apagar</button>
+                                    <button class="admin-btn-edit" onclick="editarComentario('${id}', '${c.id}')">Editar</button>
+                                </div>
+                                ` : ''}
                             </div>`;
                         });
                     } else {
@@ -359,7 +360,6 @@
             });
         }
 
-        // Função para salvar o comentário no Firebase
         window.enviarComentario = function(e, articleId) {
             e.preventDefault();
             const nomeStr = document.getElementById('com-nome').value;
@@ -374,7 +374,26 @@
                 timestamp: Date.now()
             });
 
-            document.getElementById('com-texto').value = ''; // Limpa o texto, mas mantém o nome salvo para facilitar
+            document.getElementById('com-texto').value = ''; 
+        }
+
+        // NOVAS FUNÇÕES PARA O ADMINISTRADOR GERENCIAR COMENTÁRIOS
+        window.apagarComentario = function(articleId, commentId) {
+            if(confirm("Tem certeza que deseja apagar este comentário?")) {
+                db.ref('articles/' + articleId + '/comments/' + commentId).remove();
+            }
+        }
+
+        window.editarComentario = function(articleId, commentId) {
+            const currentTextElement = document.getElementById('text-' + commentId);
+            const currentText = currentTextElement ? currentTextElement.innerText : "";
+            const novoTexto = prompt("Edite o comentário (ou apague e digite outro):", currentText.replace(" (Editado pela Moderação)", ""));
+            
+            if(novoTexto !== null && novoTexto.trim() !== "") {
+                db.ref('articles/' + articleId + '/comments/' + commentId).update({
+                    texto: novoTexto + " (Editado pela Moderação)"
+                });
+            }
         }
 
         document.getElementById('form-noticia').onsubmit = function(e) {
